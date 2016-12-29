@@ -1,5 +1,6 @@
 package cz.chovanecm.pascal;
 
+import com.sun.org.apache.bcel.internal.classfile.SourceFile;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
 import cz.rank.pj.pascal.NotEnoughtParametersException;
 import cz.rank.pj.pascal.UnknowExpressionTypeException;
@@ -13,6 +14,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 /**
  *
@@ -20,7 +26,12 @@ import java.nio.file.Paths;
  */
 public class PascalMain {
 
-    private static Reader inputReader;
+    @org.kohsuke.args4j.Argument(usage = "Source file. If not specified, standard input will be used.")
+    private String sourceFile;
+    private Reader inputReader;
+
+    @Option(name = "-no-truffle", usage = "Do not use Truffle, use a simple interpreter instead.")
+    private boolean doNotUseTruffle = false;
 
     /**
      * @param args the command line arguments
@@ -28,27 +39,42 @@ public class PascalMain {
     public static void main(String[] args) throws ParseException, IOException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException, UnknowExpressionTypeException, NotUsableOperatorException {
         System.out.println("Truffle Pascal");
         System.out.println(System.getProperty("graal.TruffleMinInvokeThreshold"));
-        parseArgs(args);
-        Parser parser = new Parser(inputReader);
-        
-        //Karel's behaviour:
-        parser.parse();
-        parser.run();
-        
+        new PascalMain().runProgram(args);
     }
 
-    private static void parseArgs(String[] args) {
-        if (args.length > 0) {
-            String fileName = args[0];
+    public void runProgram(String[] args) throws ParseException, IOException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException, UnknowExpressionTypeException, NotUsableOperatorException {
+        parseArgs(args);
+        Parser parser = new Parser(inputReader);
+
+        //Karel's behaviour:
+        if (doNotUseTruffle) {
+            parser.parse();
+            parser.run();
+        }
+
+    }
+
+    private void parseArgs(String[] args) {
+        CmdLineParser cmdParser = new CmdLineParser(this);
+        try {
+            cmdParser.parseArgument(args);
+        } catch (CmdLineException ex) {
+            System.err.println(ex.getLocalizedMessage());
+            cmdParser.printUsage(System.err);
+            System.exit(0);
+        }
+
+        if (sourceFile != null) {
             try {
-                inputReader = Files.newBufferedReader(Paths.get(fileName));
+                inputReader = Files.newBufferedReader(Paths.get(sourceFile));
             } catch (IOException ex) {
-                System.err.println("Couldn't open file " + fileName);
+                System.err.println("Couldn't open file " + sourceFile);
             }
 
         } else {
             inputReader = new InputStreamReader(System.in);
         }
+
     }
 
 }
