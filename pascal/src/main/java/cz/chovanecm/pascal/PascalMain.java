@@ -1,5 +1,13 @@
 package cz.chovanecm.pascal;
 
+import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
+import cz.rank.pj.pascal.NotEnoughtParametersException;
+import cz.rank.pj.pascal.UnknowExpressionTypeException;
+import cz.rank.pj.pascal.UnknowProcedureNameException;
+import cz.rank.pj.pascal.lexan.LexicalException;
+import cz.rank.pj.pascal.operator.NotUsableOperatorException;
+import cz.rank.pj.pascal.parser.ParseException;
+import cz.rank.pj.pascal.parser.UnknowVariableNameException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -17,10 +25,16 @@ public class PascalMain {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException, IOException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException, UnknowExpressionTypeException, NotUsableOperatorException {
         System.out.println("Truffle Pascal");
         System.out.println(System.getProperty("graal.TruffleMinInvokeThreshold"));
         parseArgs(args);
+        Parser parser = new Parser(inputReader);
+        
+        //Karel's behaviour:
+        parser.parse();
+        parser.run();
+        
     }
 
     private static void parseArgs(String[] args) {
