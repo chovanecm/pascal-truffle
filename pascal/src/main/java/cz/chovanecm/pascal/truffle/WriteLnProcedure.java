@@ -11,7 +11,8 @@ import cz.rank.pj.pascal.Expression;
 import cz.rank.pj.pascal.NotEnoughtParametersException;
 import cz.rank.pj.pascal.UnknowExpressionTypeException;
 import cz.rank.pj.pascal.operator.NotUsableOperatorException;
-import java.util.Vector;
+
+import java.util.List;
 
 /**
  *
@@ -19,10 +20,6 @@ import java.util.Vector;
  */
 public class WriteLnProcedure extends Node implements ProcedureInterface{
 
-    @Override
-    public void setParameters(Vector<Expression> parseProcedureParameters) throws NotEnoughtParametersException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public ProcedureInterface clone() {
@@ -33,5 +30,12 @@ public class WriteLnProcedure extends Node implements ProcedureInterface{
     public void execute() throws UnknowExpressionTypeException, NotUsableOperatorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void setParameters(List<Expression> parameters) throws NotEnoughtParametersException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
     
 }

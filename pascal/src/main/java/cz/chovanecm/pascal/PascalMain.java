@@ -1,6 +1,5 @@
 package cz.chovanecm.pascal;
 
-import com.sun.org.apache.bcel.internal.classfile.SourceFile;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
 import cz.rank.pj.pascal.NotEnoughtParametersException;
 import cz.rank.pj.pascal.UnknowExpressionTypeException;
@@ -9,16 +8,15 @@ import cz.rank.pj.pascal.lexan.LexicalException;
 import cz.rank.pj.pascal.operator.NotUsableOperatorException;
 import cz.rank.pj.pascal.parser.ParseException;
 import cz.rank.pj.pascal.parser.UnknowVariableNameException;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
 
 /**
  *
@@ -50,6 +48,9 @@ public class PascalMain {
         if (doNotUseTruffle) {
             parser.parse();
             parser.run();
+        } else {
+            System.out.println("Not implemented yet. Disable truffle support.");
+            //Truffle.getRuntime().createCallTarget(rootNode);
         }
 
     }

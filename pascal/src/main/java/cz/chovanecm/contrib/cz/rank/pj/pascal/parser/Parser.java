@@ -1,49 +1,45 @@
 package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
+import cz.chovanecm.pascal.ast.BlockInterface;
 import cz.chovanecm.pascal.ast.ProcedureInterface;
 import cz.chovanecm.pascal.ast.RankAstFactory;
+import cz.chovanecm.pascal.ast.VariableInterface;
 import cz.rank.pj.pascal.*;
-import cz.rank.pj.pascal.statement.*;
-import cz.rank.pj.pascal.operator.*;
 import cz.rank.pj.pascal.lexan.LexicalAnalyzator;
 import cz.rank.pj.pascal.lexan.LexicalException;
+import cz.rank.pj.pascal.operator.NotUsableOperatorException;
 import cz.rank.pj.pascal.parser.ParseException;
 import cz.rank.pj.pascal.parser.UnknowVariableNameException;
+import cz.rank.pj.pascal.statement.Assignment;
+import cz.rank.pj.pascal.statement.Statement;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * User: karl Date: Jan 31, 2006 Time: 2:18:09 PM
  */
 public class Parser {
 
-    LexicalAnalyzator lexan;
-    Token currentToken;
-
-    LinkedHashMap<String, Variable> globalVariables;
-    LinkedHashMap<String, ProcedureInterface> globalProcedures;
-
-    private boolean tokenPushed;
-
     private static Logger logger;
 
-    protected Statement entryPoint;
+    static {
+        logger = Logger.getLogger(Parser.class);
+    }
+
+    LexicalAnalyzator lexan;
+    Token currentToken;
+    LinkedHashMap<String, VariableInterface> globalVariables;
+    LinkedHashMap<String, ProcedureInterface> globalProcedures;
+    private Statement entryPoint;
+    private boolean tokenPushed;
     private AstFactoryInterface astFactory = new RankAstFactory();
-
-
-    public AstFactoryInterface getAstFactory() {
-        return astFactory;
-    }
-
-    public void setAstFactory(AstFactoryInterface astFactory) {
-        this.astFactory = astFactory;
-    }
 
     public Parser(Reader reader) {
         this.lexan = new LexicalAnalyzator(reader);
@@ -57,9 +53,30 @@ public class Parser {
         initGlobals();
     }
 
+    static VariableInterface getVariablesCollision(LinkedHashMap<String, VariableInterface> vars1, LinkedHashMap<String, VariableInterface> vars2) {
+        VariableInterface variable = null;
+
+        for (String currentKey : vars1.keySet()) {
+            if (vars2.containsKey(currentKey)) {
+                variable = vars2.get(currentKey);
+                break;
+            }
+        }
+
+        return variable;
+    }
+
+    public AstFactoryInterface getAstFactory() {
+        return astFactory;
+    }
+
+    public void setAstFactory(AstFactoryInterface astFactory) {
+        this.astFactory = astFactory;
+    }
+
     private void initGlobals() {
-        globalVariables = new LinkedHashMap<String, Variable>();
-        globalProcedures = new LinkedHashMap<String, ProcedureInterface>();
+        globalVariables = new LinkedHashMap<>();
+        globalProcedures = new LinkedHashMap<>();
         setTokenPushed(false);
 
         initStaticMethods();
@@ -82,7 +99,7 @@ public class Parser {
         }
     }
 
-    public Variable getGlobalVariable(String name) {
+    public VariableInterface getGlobalVariable(String name) {
         return globalVariables.get(name);
     }
 
@@ -90,12 +107,12 @@ public class Parser {
         return globalProcedures.get(name);
     }
 
-    LinkedHashMap<String, Variable> parseVar() throws ParseException, IOException, LexicalException {
-        Vector<Token> variablesNames;
-        LinkedHashMap<String, Variable> variables;
+    LinkedHashMap<String, VariableInterface> parseVar() throws ParseException, IOException, LexicalException {
+        List<Token> variablesNames;
+        LinkedHashMap<String, VariableInterface> variables;
 
-        variablesNames = new Vector<Token>();
-        variables = new LinkedHashMap<String, Variable>();
+        variablesNames = new ArrayList<>();
+        variables = new LinkedHashMap<>();
 
         boolean variablesParsed = false;
 
@@ -136,7 +153,7 @@ public class Parser {
                             logger.debug(variable);
 
                             if (!variables.containsKey(variable.getName())) {
-                                variables.put(variable.getName(), VariableFactory.createIntegerVariable(variable.getName()));
+                                variables.put(variable.getName(), astFactory.createIntegerVariable(variable.getName()));
                             } else {
                                 throw new ParseException("variable '" + variable.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
@@ -154,7 +171,7 @@ public class Parser {
                             logger.debug(variable);
 
                             if (!variables.containsKey(variable.getName())) {
-                                variables.put(variable.getName(), VariableFactory.createStringVariable(variable.getName()));
+                                variables.put(variable.getName(), astFactory.createStringVariable(variable.getName()));
                             } else {
                                 throw new ParseException("variable '" + variable.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
@@ -172,7 +189,7 @@ public class Parser {
                             logger.debug(variable);
 
                             if (!variables.containsKey(variable.getName())) {
-                                variables.put(variable.getName(), VariableFactory.createRealVariable(variable.getName()));
+                                variables.put(variable.getName(), astFactory.createRealVariable(variable.getName()));
                             } else {
                                 throw new ParseException("variable '" + variable.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
@@ -205,19 +222,6 @@ public class Parser {
         return variables;
     }
 
-    static Variable getVariablesCollision(LinkedHashMap<String, Variable> vars1, LinkedHashMap<String, Variable> vars2) {
-        Variable variable = null;
-
-        for (String currentKey : vars1.keySet()) {
-            if (vars2.containsKey(currentKey)) {
-                variable = vars2.get(currentKey);
-                break;
-            }
-        }
-
-        return variable;
-    }
-
     public void procedure() {
 
     }
@@ -227,7 +231,7 @@ public class Parser {
     }
 
     public Statement mainBegin() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
-        Block block = new Block();
+        BlockInterface block = getAstFactory().createBlock();
 
         while (!readToken().isEnd()) {
 
@@ -236,7 +240,7 @@ public class Parser {
             logger.debug(currentToken);
 
             /*
-			if (st == null) {
+            if (st == null) {
 				throw new ParseException("Unexpected token '" + currentToken + "'");
 			}
              */
@@ -258,7 +262,7 @@ public class Parser {
     }
 
     public Statement parseBegin() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
-        Block block = new Block();
+        BlockInterface block = astFactory.createBlock();
         while (!readToken().isEnd()) {
 
             Statement st = parseStatement();
@@ -283,12 +287,12 @@ public class Parser {
         return block;
     }
 
-    private Vector<Expression> parseProcedureParameters() throws IOException, LexicalException, ParseException, UnknowVariableNameException {
+    private List<Expression> parseProcedureParameters() throws IOException, LexicalException, ParseException, UnknowVariableNameException {
         if (readToken().isRightParentie()) {
             return null;
         }
 
-        Vector<Expression> parameters = new Vector<Expression>();
+        List<Expression> parameters = new ArrayList<>();
 
         boolean hasMoreParameters = true;
 
@@ -363,7 +367,8 @@ public class Parser {
         readToken();
         Statement st = parseStatement();
 
-        return new While(ex, st);
+        return astFactory.createWhile(ex, st);
+        // return new While(ex, st);
     }
 
     private Statement parseIf() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
@@ -388,7 +393,8 @@ public class Parser {
             }
         }
 
-        return new If(ex, st1, st2);
+        return astFactory.createIf(ex, st1, st2);
+        //return new If(ex, st1, st2);
     }
 
     private Statement parseFor() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
@@ -428,14 +434,16 @@ public class Parser {
         logger.debug(currentToken);
 
         if (downto) {
-            return new ForDownto((Assignment) assignmentStatement, finalExpression, executeStatement);
+            return astFactory.createForDownTo(assignmentStatement, finalExpression, executeStatement);
+            //return new ForDownto((Assignment) assignmentStatement, finalExpression, executeStatement);
         } else {
-            return new ForTo((Assignment) assignmentStatement, finalExpression, executeStatement);
+            return astFactory.createForTo(assignmentStatement, finalExpression, executeStatement);
+            //return new ForTo((Assignment) assignmentStatement, finalExpression, executeStatement);
         }
     }
 
-    private Variable checkAndReturnVariable(String name) throws UnknowVariableNameException {
-        Variable variable = getGlobalVariable(name);
+    private VariableInterface checkAndReturnVariable(String name) throws UnknowVariableNameException {
+        VariableInterface variable = getGlobalVariable(name);
 
         if (variable == null) {
             throw new UnknowVariableNameException(name + ":" + lexan.getLineNumber());
@@ -455,7 +463,7 @@ public class Parser {
         /*try {
             procedure = (ProcedureInterface) procedure.clone();
         } catch (CloneNotSupportedException e) {
-            // empty, cloning is SUPPORTED ALWAYS 
+            // empty, cloning is SUPPORTED ALWAYS
         }*/
         return procedure;
     }
@@ -476,15 +484,18 @@ public class Parser {
         switch (readToken().getType()) {
             case VAL_INTEGER:
                 logger.debug("parseExpression:interger value " + currentToken.getIntegerValue());
-                return new Constant(currentToken.getIntegerValue());
+                return astFactory.createConstant(currentToken.getIntegerValue());
+            //return new Constant(currentToken.getIntegerValue());
 
             case VAL_DOUBLE:
                 logger.debug("parseExpression:double value " + currentToken.getDoubleValue());
-                return new Constant(currentToken.getDoubleValue());
+                return astFactory.createConstant(currentToken.getDoubleValue());
+            //return new Constant(currentToken.getDoubleValue());
 
             case VAL_STRING:
                 logger.debug("parseExpression:string value " + currentToken.getStringValue());
-                return new Constant(currentToken.getStringValue());
+                return astFactory.createConstant(currentToken.getStringValue());
+            //return new Constant(currentToken.getStringValue());
 
             case ID:
                 logger.debug("parseExpression:id name " + currentToken);
@@ -493,11 +504,13 @@ public class Parser {
             // Unary minus
             case MINUS:
                 logger.debug("parseExpression:token " + currentToken);
-                return new UnaryMinus(primaryExpression());
+                return astFactory.createUnaryMinus(primaryExpression());
+            //return new UnaryMinus(primaryExpression());
 
             case LPAREN:
                 logger.debug("parseExpression:lparen");
-                Expression ex = new Parenties(parseExpression());
+                Expression ex = astFactory.createParenthesis(parseExpression());
+                //Expression ex = new Parenties(parseExpression());
 
                 if (!readToken().isRightParentie()) {
                     throw new ParseException(')', lexan.getLineNumber());
@@ -526,23 +539,28 @@ public class Parser {
 
             switch (currentToken.getType()) {
                 case PLUS:
-                    ex = new PlusOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createPlusOperator(ex, parseOperatorExpression());
+                    //ex = new PlusOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;
                 case MINUS:
-                    ex = new MinusOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createMinusOperator(ex, parseOperatorExpression());
+                    //ex = new MinusOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;
                 case MULT:
-                    ex = new MultipleOperator(ex, primaryExpression());
+                    ex = astFactory.createMultiplicationOperator(ex, primaryExpression());
+                    //ex = new MultipleOperator(ex, primaryExpression());
                     operatorFound = true;
                     break;
                 case REAL_DIV:
-                    ex = new DivideOperator(ex, primaryExpression());
+                    ex = astFactory.createDivisionOperator(ex, primaryExpression());
+                    //ex = new DivideOperator(ex, primaryExpression());
                     operatorFound = true;
                     break;
                 case DIV:
-                    ex = new DivideOperator(ex, primaryExpression());
+                    ex = astFactory.createDivisionOperator(ex, primaryExpression());
+                    //ex = new DivideOperator(ex, primaryExpression());
                     operatorFound = true;
                     break;
                 default:
@@ -568,27 +586,33 @@ public class Parser {
 
             switch (currentToken.getType()) {
                 case LESS:
-                    ex = new LessOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createLessOperator(ex, parseOperatorExpression());
+                    //ex = new LessOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;
                 case MORE:
-                    ex = new MoreOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createGreaterOperator(ex, parseOperatorExpression());
+                    //ex = new MoreOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;
                 case EQUAL:
-                    ex = new EqualOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createEqualOperator(ex, parseOperatorExpression());
+                    //ex = new EqualOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;
                 case LESS_EQUAL:
-                    ex = new LessEqualOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createLessEqualOperator(ex, parseOperatorExpression());
+                    //ex = new LessEqualOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;
                 case MORE_EQUAL:
-                    ex = new MoreEqualOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createGreaterEqualOperator(ex, parseOperatorExpression());
+                    //ex = new MoreEqualOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;
                 case NOTEQUAL:
-                    ex = new NotEqualOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createNotEqualOperator(ex, parseOperatorExpression());
+                    //ex = new NotEqualOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;
                 default:
@@ -603,7 +627,8 @@ public class Parser {
     private Expression parseExpression() throws IOException, LexicalException, UnknowVariableNameException, ParseException {
         Expression ex;
         if (readToken().isNot()) {
-            ex = new NotOperator(parseCompareExpression());
+            ex = astFactory.createNotOperator(parseCompareExpression());
+            //ex = new NotOperator(parseCompareExpression());
         } else {
             setTokenPushed(true);
             ex = parseCompareExpression();
@@ -620,12 +645,14 @@ public class Parser {
 
             switch (currentToken.getType()) {
                 case AND:
-                    ex = new AndOperator(ex, parseExpression());
+                    ex = astFactory.createAndOperator(ex, parseExpression());
+                    //ex = new AndOperator(ex, parseExpression());
 //					ex = new LessOperator(ex, primaryExpression());
                     operatorFound = true;
                     break;
                 case OR:
-                    ex = new OrOperator(ex, parseExpression());
+                    ex = astFactory.createOrOperator(ex, parseExpression());
+                    //ex = new OrOperator(ex, parseExpression());
                     operatorFound = true;
                     break;
                 /*
@@ -643,8 +670,8 @@ public class Parser {
         return ex;
     }
 
-    private Statement parseAssigment(Variable variable) throws IOException, LexicalException, ParseException, UnknowVariableNameException {
-        Statement st = new Assignment(variable, parseExpression());
+    private Statement parseAssigment(VariableInterface variable) throws IOException, LexicalException, ParseException, UnknowVariableNameException {
+        Statement st = astFactory.createAssignment(variable, parseExpression()); //new Assignment(variable, parseExpression());
 
         logger.debug("parseAssigment token:" + currentToken);
         /*
@@ -664,13 +691,13 @@ public class Parser {
                     parseProgram();
                     break;
                 case VAR:
-                    LinkedHashMap<String, Variable> localVariables;
+                    LinkedHashMap<String, VariableInterface> localVariables;
                     localVariables = parseVar();
 
                     if (globalVariables.isEmpty()) {
                         globalVariables = localVariables;
                     } else {
-                        Variable collisionVariable = getVariablesCollision(globalVariables, localVariables);
+                        VariableInterface collisionVariable = getVariablesCollision(globalVariables, localVariables);
 
                         if (collisionVariable != null) {
                             throw new ParseException("variable'" + collisionVariable.getName() + "' already defined");
@@ -712,10 +739,6 @@ public class Parser {
 
     public void setTokenPushed(boolean tokenPushed) {
         this.tokenPushed = tokenPushed;
-    }
-
-    static {
-        logger = Logger.getLogger(Parser.class);
     }
 
     public void run() throws UnknowExpressionTypeException, NotUsableOperatorException {
