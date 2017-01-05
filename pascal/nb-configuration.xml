@@ -14,5 +14,7 @@ That way multiple projects can share the same settings (useful for formatting ru
 Any value defined here will override the pom.xml file value but is only applicable to the current project.
 -->
         <netbeans.hint.jdkPlatform>GraalVM_JDK_1.8</netbeans.hint.jdkPlatform>
+        <netbeans.checkstyle.format>true</netbeans.checkstyle.format>
+        <netbeans.hint.license>apache20</netbeans.hint.license>
     </properties>
 </project-shared-configuration>

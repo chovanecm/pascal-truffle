@@ -1,6 +1,24 @@
+/* 
+ * Copyright 2017 Martin Chovanec.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cz.chovanecm.pascal;
 
+import com.oracle.truffle.api.source.Source;
+import com.oracle.truffle.api.vm.PolyglotEngine;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
+import cz.chovanecm.pascal.truffle.PascalLanguage;
 import cz.rank.pj.pascal.NotEnoughtParametersException;
 import cz.rank.pj.pascal.UnknowExpressionTypeException;
 import cz.rank.pj.pascal.UnknowProcedureNameException;
@@ -33,14 +51,15 @@ public class PascalMain {
 
     /**
      * @param args the command line arguments
+     * @throws java.lang.Exception
      */
-    public static void main(String[] args) throws ParseException, IOException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException, UnknowExpressionTypeException, NotUsableOperatorException {
+    public static void main(String[] args) throws Exception {
         System.out.println("Truffle Pascal");
         System.out.println(System.getProperty("graal.TruffleMinInvokeThreshold"));
         new PascalMain().runProgram(args);
     }
 
-    public void runProgram(String[] args) throws ParseException, IOException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException, UnknowExpressionTypeException, NotUsableOperatorException {
+    public void runProgram(String[] args) throws ParseException, IOException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException, UnknowExpressionTypeException, NotUsableOperatorException, Exception {
         parseArgs(args);
         Parser parser = new Parser(inputReader);
 
@@ -49,10 +68,24 @@ public class PascalMain {
             parser.parse();
             parser.run();
         } else {
-            System.out.println("Not implemented yet. Disable truffle support.");
-            //Truffle.getRuntime().createCallTarget(rootNode);
+            runProgramWithTruffle();
         }
+        inputReader.close();
+    }
 
+    public void runProgramWithTruffle() throws Exception {
+        Source.Builder builder = Source.newBuilder(inputReader);
+        if (sourceFile != null) {
+            builder = builder.name(sourceFile);
+        } else {
+            builder = builder.name("<interactive session>").interactive().mimeType(PascalLanguage.MIME_TYPE);
+        }
+        System.err.println("Building source");
+        Source source = builder.build();
+        PolyglotEngine engine = PolyglotEngine.newBuilder().setIn(System.in).setOut(System.out).build();
+        System.err.println("Executing");
+        PolyglotEngine.Value result = engine.eval(source);
+        engine.dispose();
     }
 
     private void parseArgs(String[] args) {

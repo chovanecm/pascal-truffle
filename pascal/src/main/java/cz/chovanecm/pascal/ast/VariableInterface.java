@@ -15,20 +15,34 @@
  */
 package cz.chovanecm.pascal.ast;
 
-import cz.rank.pj.pascal.Expression;
-import cz.rank.pj.pascal.NotEnoughtParametersException;
-import cz.rank.pj.pascal.statement.Statement;
-
-import java.util.List;
-
 /**
  *
  * @author martin
  */
-public interface ProcedureInterface extends Statement {
+public interface VariableInterface extends ExpressionInterface {
 
-    void setParameters(List<Expression> parameters) throws NotEnoughtParametersException;
+    public String getName();
 
-    ProcedureInterface clone();
+    abstract String getString();
+
+    public Integer getInteger();
+
+    public Double getReal();
+
+    public void setString(String value);
+
+    public void setInteger(Integer value);
+
+    public void setReal(Double value);
+
+    public void setName(String id);
+
+    @Override
+    public boolean equals(Object object);
+
+    @Override
+    public int hashCode();
+
+    public void setValue(Object value);
 
 }
