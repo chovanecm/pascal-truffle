@@ -15,11 +15,14 @@
  */
 package cz.chovanecm.pascal.truffle;
 
+import cz.chovanecm.pascal.truffle.ast.TruffleAstFactory;
 import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.source.Source;
+import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
 
 /**
  *
@@ -42,7 +45,13 @@ public class PascalLanguage extends TruffleLanguage<Object> {
 
     @Override
     protected CallTarget parse(Source code, Node context, String... argumentNames) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Parser parser = new Parser(code.getReader());
+        
+        TruffleAstFactory astFactory = new TruffleAstFactory(code);
+        parser.setAstFactory(astFactory);
+        parser.parse();
+        
+        return Truffle.getRuntime().createCallTarget(astFactory.getEntryPoint());
     }
 
     @Override

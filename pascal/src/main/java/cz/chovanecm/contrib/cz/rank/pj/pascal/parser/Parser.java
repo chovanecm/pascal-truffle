@@ -231,7 +231,7 @@ public class Parser {
     }
 
     public Statement mainBegin() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
-        BlockInterface block = getAstFactory().createBlock();
+        BlockInterface block = getAstFactory().createMainBlock();
 
         while (!readToken().isEnd()) {
 

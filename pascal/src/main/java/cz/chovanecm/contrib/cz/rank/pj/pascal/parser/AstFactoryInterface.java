@@ -21,6 +21,10 @@ public interface AstFactoryInterface {
 
     ProcedureInterface createWriteProcedure();
 
+    default BlockInterface createMainBlock() {
+        return createBlock();
+    }
+
     BlockInterface createBlock();
 
     public Statement createAssignment(VariableInterface variable, Expression expression);

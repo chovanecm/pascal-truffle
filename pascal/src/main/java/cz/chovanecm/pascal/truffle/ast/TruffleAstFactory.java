@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cz.chovanecm.pascal.truffle;
+package cz.chovanecm.pascal.truffle.ast;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.nodes.RootNode;
+import com.oracle.truffle.api.source.Source;
+import com.oracle.truffle.api.source.SourceSection;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.ast.BlockInterface;
 import cz.chovanecm.pascal.ast.ProcedureInterface;
 import cz.chovanecm.pascal.ast.VariableInterface;
+import cz.chovanecm.pascal.truffle.WriteLnProcedure;
+import cz.chovanecm.pascal.truffle.nodes.PascalRootNode;
 import cz.rank.pj.pascal.Expression;
 import cz.rank.pj.pascal.statement.Statement;
 
@@ -26,8 +32,15 @@ import cz.rank.pj.pascal.statement.Statement;
  *
  * @author martin
  */
-public class TruffleAstFactory implements AstFactoryInterface{
+public class TruffleAstFactory implements AstFactoryInterface {
 
+    private RootNode entryPoint;
+    private Source source;
+    
+    public TruffleAstFactory(Source source) {
+        this.source = source;
+    }
+    
     @Override
     public ProcedureInterface createWriteLnProcedure() {
         return new WriteLnProcedure();
@@ -38,6 +51,16 @@ public class TruffleAstFactory implements AstFactoryInterface{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public BlockInterface createMainBlock() {
+        // TODO: Temporary solution:
+        SourceSection section = source.createUnavailableSection();
+        PascalRootNode block = new PascalRootNode(section, new FrameDescriptor());
+        setEntryPoint(block);
+        return block;
+    }
+
+    
     @Override
     public BlockInterface createBlock() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -172,5 +195,13 @@ public class TruffleAstFactory implements AstFactoryInterface{
     public Expression createOrOperator(Expression left, Expression right) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    public RootNode getEntryPoint() {
+        return entryPoint;
+    }
+
+    protected void setEntryPoint(RootNode entryPoint) {
+        this.entryPoint = entryPoint;
+    }
+
 }
