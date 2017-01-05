@@ -29,7 +29,7 @@ import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
  * @author martin
  */
 @TruffleLanguage.Registration(mimeType = PascalLanguage.MIME_TYPE, name = "Pascal", version = "0.1")
-public class PascalLanguage extends TruffleLanguage<Object> {
+public class PascalLanguage extends TruffleLanguage<PascalContext> {
     public static final String MIME_TYPE = "text/pascal";
 
     public static final PascalLanguage INSTANCE = new PascalLanguage();
@@ -39,8 +39,9 @@ public class PascalLanguage extends TruffleLanguage<Object> {
         
     }
     @Override
-    protected Object createContext(Env env) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected PascalContext createContext(Env env) {
+        //TODO: This could probably use environment?
+        return new PascalContext();
     }
 
     @Override
@@ -55,12 +56,12 @@ public class PascalLanguage extends TruffleLanguage<Object> {
     }
 
     @Override
-    protected Object findExportedSymbol(Object context, String globalName, boolean onlyExplicit) {
+    protected Object findExportedSymbol(PascalContext context, String globalName, boolean onlyExplicit) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    protected Object getLanguageGlobal(Object context) {
+    protected Object getLanguageGlobal(PascalContext context) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
