@@ -20,12 +20,12 @@ import com.oracle.truffle.api.vm.PolyglotEngine;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
 import cz.chovanecm.pascal.truffle.PascalLanguage;
 import cz.rank.pj.pascal.NotEnoughtParametersException;
-import cz.rank.pj.pascal.UnknowExpressionTypeException;
-import cz.rank.pj.pascal.UnknowProcedureNameException;
+import cz.rank.pj.pascal.UnknownExpressionTypeException;
+import cz.rank.pj.pascal.UnknownProcedureNameException;
 import cz.rank.pj.pascal.lexan.LexicalException;
 import cz.rank.pj.pascal.operator.NotUsableOperatorException;
 import cz.rank.pj.pascal.parser.ParseException;
-import cz.rank.pj.pascal.parser.UnknowVariableNameException;
+import cz.rank.pj.pascal.parser.UnknownVariableNameException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -59,7 +59,7 @@ public class PascalMain {
         new PascalMain().runProgram(args);
     }
 
-    public void runProgram(String[] args) throws ParseException, IOException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException, UnknowExpressionTypeException, NotUsableOperatorException, Exception {
+    public void runProgram(String[] args) throws ParseException, IOException, LexicalException, UnknownVariableNameException, UnknownProcedureNameException, NotEnoughtParametersException, UnknownExpressionTypeException, NotUsableOperatorException, Exception {
         parseArgs(args);
         Parser parser = new Parser(inputReader);
 

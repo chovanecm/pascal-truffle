@@ -15,14 +15,19 @@
  */
 package cz.chovanecm.pascal.truffle;
 
-import cz.chovanecm.pascal.truffle.ast.TruffleAstFactory;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.source.Source;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
+import cz.chovanecm.pascal.truffle.nodes.PascalRootNode;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 /**
  *
@@ -40,19 +45,21 @@ public class PascalLanguage extends TruffleLanguage<PascalContext> {
     }
     @Override
     protected PascalContext createContext(Env env) {
-        //TODO: This could probably use environment?
-        return new PascalContext();
+        BufferedReader in = new BufferedReader(new InputStreamReader(env.in()));
+        PrintWriter out = new PrintWriter(env.out());
+        return new PascalContext(env, in, out);
     }
 
     @Override
     protected CallTarget parse(Source code, Node context, String... argumentNames) throws Exception {
         Parser parser = new Parser(code.getReader());
-        
-        TruffleAstFactory astFactory = new TruffleAstFactory(code);
-        parser.setAstFactory(astFactory);
+
+
         parser.parse();
-        
-        return Truffle.getRuntime().createCallTarget(astFactory.getEntryPoint());
+
+        // NOTE: unavailable section is just "to make it work"
+        return Truffle.getRuntime().createCallTarget(new PascalRootNode(code.createUnavailableSection(),
+                new FrameDescriptor(), parser.getEntryPoint()));
     }
 
     @Override
@@ -71,7 +78,7 @@ public class PascalLanguage extends TruffleLanguage<PascalContext> {
     }
 
     @Override
-    protected Object evalInContext(Source source, Node node, MaterializedFrame mFrame) throws Exception {
+    protected Object evalInContext(Source source, Node node, MaterializedFrame mFrame) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

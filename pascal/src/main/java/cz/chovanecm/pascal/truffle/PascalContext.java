@@ -16,11 +16,32 @@
 package cz.chovanecm.pascal.truffle;
 
 import com.oracle.truffle.api.ExecutionContext;
+import com.oracle.truffle.api.TruffleLanguage;
+
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 
 /**
  *
  * @author martin
  */
 public class PascalContext extends ExecutionContext {
-    
+
+    private final TruffleLanguage.Env env;
+    private final BufferedReader in;
+    private final PrintWriter out;
+
+    public PascalContext(TruffleLanguage.Env env, BufferedReader in, PrintWriter out) {
+        this.env = env;
+        this.in = in;
+        this.out = out;
+    }
+
+    public BufferedReader getIn() {
+        return in;
+    }
+
+    public PrintWriter getOut() {
+        return out;
+    }
 }

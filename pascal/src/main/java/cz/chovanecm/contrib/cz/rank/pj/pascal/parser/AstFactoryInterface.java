@@ -5,11 +5,11 @@
  */
 package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
-import cz.chovanecm.pascal.ast.BlockInterface;
-import cz.chovanecm.pascal.ast.ProcedureInterface;
-import cz.chovanecm.pascal.ast.VariableInterface;
-import cz.rank.pj.pascal.Expression;
-import cz.rank.pj.pascal.statement.Statement;
+
+import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
+import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
+import cz.chovanecm.pascal.truffle.nodes.ReadVariableNode;
+import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 
 /**
  *
@@ -17,66 +17,66 @@ import cz.rank.pj.pascal.statement.Statement;
  */
 public interface AstFactoryInterface {
 
-    ProcedureInterface createWriteLnProcedure();
+    ProcedureNode createWriteLnProcedure();
 
-    ProcedureInterface createWriteProcedure();
+    ProcedureNode createWriteProcedure();
 
-    default BlockInterface createMainBlock() {
-        return createBlock();
+    default StatementNode createMainBlock(StatementNode[] statements) {
+        return createBlock(statements);
     }
 
-    BlockInterface createBlock();
+    StatementNode createBlock(StatementNode[] statements);
 
-    public Statement createAssignment(VariableInterface variable, Expression expression);
+    public StatementNode createAssignment(ReadVariableNode variable, ExpressionNode expression);
 
-    public Statement createWhile(Expression expression, Statement statement);
+    public StatementNode createWhile(ExpressionNode expression, StatementNode statement);
 
-    public Statement createIf(Expression expression, Statement statementTrue, Statement statementFalse);
+    public StatementNode createIf(ExpressionNode expression, StatementNode statementTrue, StatementNode statementFalse);
 
-    public Statement createForDownTo(Statement assignmentStatement, Expression finalExpression, Statement executeStatement);
+    public StatementNode createForDownTo(StatementNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
 
-    public Statement createForTo(Statement assignmentStatement, Expression finalExpression, Statement executeStatement);
+    public StatementNode createForTo(StatementNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
 
-    public Expression createConstant(Integer integerValue);
+    public ExpressionNode createConstant(Integer integerValue);
 
-    public Expression createConstant(Double doubleValue);
+    public ExpressionNode createConstant(Double doubleValue);
 
-    public Expression createConstant(String stringValue);
+    public ExpressionNode createConstant(String stringValue);
 
-    public Expression createUnaryMinus(Expression primaryExpression);
+    public ExpressionNode createUnaryMinus(ExpressionNode primaryExpression);
 
-    public Expression createParenthesis(Expression parseExpression);
+    public ExpressionNode createParenthesis(ExpressionNode parseExpression);
 
-    public VariableInterface createIntegerVariable(String id);
+    public ReadVariableNode createIntegerVariable(String id);
 
-    public VariableInterface createStringVariable(String id);
+    public ReadVariableNode createStringVariable(String id);
 
-    public VariableInterface createRealVariable(String id);
+    public ReadVariableNode createRealVariable(String id);
 
-    public Expression createPlusOperator(Expression left, Expression right);
+    public ExpressionNode createPlusOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createMinusOperator(Expression left, Expression right);
+    public ExpressionNode createMinusOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createMultiplicationOperator(Expression left, Expression right);
+    public ExpressionNode createMultiplicationOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createDivisionOperator(Expression left, Expression right);
+    public ExpressionNode createDivisionOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createLessOperator(Expression left, Expression right);
+    public ExpressionNode createLessOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createGreaterOperator(Expression left, Expression right);
+    public ExpressionNode createGreaterOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createEqualOperator(Expression left, Expression right);
+    public ExpressionNode createEqualOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createLessEqualOperator(Expression left, Expression right);
+    public ExpressionNode createLessEqualOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createGreaterEqualOperator(Expression left, Expression right);
+    public ExpressionNode createGreaterEqualOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createNotEqualOperator(Expression left, Expression right);
+    public ExpressionNode createNotEqualOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createNotOperator(Expression expression);
+    public ExpressionNode createNotOperator(ExpressionNode expression);
 
-    public Expression createAndOperator(Expression left, Expression right);
+    public ExpressionNode createAndOperator(ExpressionNode left, ExpressionNode right);
 
-    public Expression createOrOperator(Expression left, Expression right);
+    public ExpressionNode createOrOperator(ExpressionNode left, ExpressionNode right);
 
 }

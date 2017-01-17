@@ -20,39 +20,28 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
-import cz.chovanecm.pascal.ast.BlockInterface;
 import cz.chovanecm.pascal.truffle.PascalLanguage;
-import cz.rank.pj.pascal.UnknowExpressionTypeException;
-import cz.rank.pj.pascal.operator.NotUsableOperatorException;
-import cz.rank.pj.pascal.statement.Statement;
+
 
 /**
  *
  * @author martin
  */
-@NodeInfo(language = "Pascal", description = "Root node of Pascal programmes")
-public class PascalRootNode extends RootNode implements BlockInterface{
+@NodeInfo(language = "Pascal", description = "Root node of Pascal programs")
+public class PascalRootNode extends RootNode {
 
-    public PascalRootNode(SourceSection sourceSection, FrameDescriptor frameDescriptor) {
+    @Child
+    StatementNode node;
+
+    public PascalRootNode(SourceSection sourceSection, FrameDescriptor frameDescriptor, StatementNode entryPoint) {
         super(PascalLanguage.class, sourceSection, frameDescriptor);
+        this.node = entryPoint;
     }
-
-
 
     @Override
     public Object execute(VirtualFrame frame) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-    }
-
-    @Override
-    public void add(Statement st) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void execute() throws UnknowExpressionTypeException, NotUsableOperatorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.executeStatement(frame);
+        return null;
     }
 
 }
