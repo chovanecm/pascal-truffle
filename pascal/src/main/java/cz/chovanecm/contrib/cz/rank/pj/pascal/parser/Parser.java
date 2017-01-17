@@ -1,16 +1,16 @@
 package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
-import cz.chovanecm.pascal.ast.BlockInterface;
-import cz.chovanecm.pascal.ast.ProcedureInterface;
-import cz.chovanecm.pascal.ast.RankAstFactory;
-import cz.chovanecm.pascal.ast.VariableInterface;
+
+import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
+import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
+import cz.chovanecm.pascal.truffle.nodes.StatementNode;
+import cz.chovanecm.pascal.truffle.nodes.VariableNode;
 import cz.rank.pj.pascal.*;
 import cz.rank.pj.pascal.lexan.LexicalAnalyzator;
 import cz.rank.pj.pascal.lexan.LexicalException;
 import cz.rank.pj.pascal.operator.NotUsableOperatorException;
 import cz.rank.pj.pascal.parser.ParseException;
-import cz.rank.pj.pascal.parser.UnknowVariableNameException;
-import cz.rank.pj.pascal.statement.Assignment;
+import cz.rank.pj.pascal.parser.UnknownVariableNameException;
 import cz.rank.pj.pascal.statement.Statement;
 import org.apache.log4j.Logger;
 
@@ -35,12 +35,11 @@ public class Parser {
 
     LexicalAnalyzator lexan;
     Token currentToken;
-    LinkedHashMap<String, VariableInterface> globalVariables;
-    LinkedHashMap<String, ProcedureInterface> globalProcedures;
-    private Statement entryPoint;
+    LinkedHashMap<String, VariableNode> globalVariableNodes;
+    LinkedHashMap<String, ProcedureNode> globalProcedureNodes;
+    private StatementNode entryPoint;
     private boolean tokenPushed;
-    private AstFactoryInterface astFactory = new RankAstFactory();
-
+    private AstFactoryInterface astFactory = null;
     public Parser(Reader reader) {
         this.lexan = new LexicalAnalyzator(reader);
 
@@ -53,17 +52,17 @@ public class Parser {
         initGlobals();
     }
 
-    static VariableInterface getVariablesCollision(LinkedHashMap<String, VariableInterface> vars1, LinkedHashMap<String, VariableInterface> vars2) {
-        VariableInterface variable = null;
+    static VariableNode getVariableNodesCollision(LinkedHashMap<String, VariableNode> vars1, LinkedHashMap<String, VariableNode> vars2) {
+        VariableNode VariableNode = null;
 
         for (String currentKey : vars1.keySet()) {
             if (vars2.containsKey(currentKey)) {
-                variable = vars2.get(currentKey);
+                VariableNode = vars2.get(currentKey);
                 break;
             }
         }
 
-        return variable;
+        return VariableNode;
     }
 
     public AstFactoryInterface getAstFactory() {
@@ -75,16 +74,16 @@ public class Parser {
     }
 
     private void initGlobals() {
-        globalVariables = new LinkedHashMap<>();
-        globalProcedures = new LinkedHashMap<>();
+        globalVariableNodes = new LinkedHashMap<>();
+        globalProcedureNodes = new LinkedHashMap<>();
         setTokenPushed(false);
 
         initStaticMethods();
     }
 
     private void initStaticMethods() {
-        globalProcedures.put("writeln", getAstFactory().createWriteLnProcedure());
-        globalProcedures.put("write", getAstFactory().createWriteProcedure());
+        globalProcedureNodes.put("writeln", getAstFactory().createWriteLnProcedure());
+        globalProcedureNodes.put("write", getAstFactory().createWriteProcedure());
     }
 
     void parseProgram() throws ParseException, IOException, LexicalException {
@@ -99,32 +98,32 @@ public class Parser {
         }
     }
 
-    public VariableInterface getGlobalVariable(String name) {
-        return globalVariables.get(name);
+    public VariableNode getGlobalVariableNode(String name) {
+        return globalVariableNodes.get(name);
     }
 
-    public ProcedureInterface getGlobalProcedure(String name) {
-        return globalProcedures.get(name);
+    public ProcedureNode getGlobalProcedureNode(String name) {
+        return globalProcedureNodes.get(name);
     }
 
-    LinkedHashMap<String, VariableInterface> parseVar() throws ParseException, IOException, LexicalException {
-        List<Token> variablesNames;
-        LinkedHashMap<String, VariableInterface> variables;
+    LinkedHashMap<String, VariableNode> parseVar() throws ParseException, IOException, LexicalException {
+        List<Token> variableNames;
+        LinkedHashMap<String, VariableNode> variables;
 
-        variablesNames = new ArrayList<>();
+        variableNames = new ArrayList<>();
         variables = new LinkedHashMap<>();
 
-        boolean variablesParsed = false;
+        boolean VariableNodesParsed = false;
 
         logger.debug("testing '" + currentToken.getType() + "' if is VAR");
         if (currentToken.isVar()) {
             logger.debug("in VAR");
-            while (!variablesParsed) {
+            while (!VariableNodesParsed) {
                 do {
                     readToken();
                     switch (currentToken.getType()) {
                         case ID:
-                            variablesNames.add(currentToken);
+                            variableNames.add(currentToken);
                             switch (readToken().getType()) {
                                 case COLON:
                                     break;
@@ -140,62 +139,62 @@ public class Parser {
                     }
                 } while (!currentToken.isColon());
 
-                Iterator variablesNamesIterator = variablesNames.iterator();
+                Iterator VariableNodesNamesIterator = variableNames.iterator();
 
                 switch (readToken().getType()) {
                     case INTEGER:
 
-                        logger.debug("INTEGER variable");
+                        logger.debug("INTEGER VariableNode");
 
-                        while (variablesNamesIterator.hasNext()) {
-                            Token variable = (Token) variablesNamesIterator.next();
+                        while (VariableNodesNamesIterator.hasNext()) {
+                            Token VariableNode = (Token) VariableNodesNamesIterator.next();
 
-                            logger.debug(variable);
+                            logger.debug(VariableNode);
 
-                            if (!variables.containsKey(variable.getName())) {
-                                variables.put(variable.getName(), astFactory.createIntegerVariable(variable.getName()));
+                            if (!variables.containsKey(VariableNode.getName())) {
+                                variables.put(VariableNode.getName(), astFactory.createIntegerVariable(VariableNode.getName()));
                             } else {
-                                throw new ParseException("variable '" + variable.getName() + "'is defined 2times!", lexan.getLineNumber());
+                                throw new ParseException("VariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
                         }
 
-                        variablesNames.clear();
+                        variableNames.clear();
                         break;
                     case STRING:
 
-                        logger.debug("STRING variable");
+                        logger.debug("STRING VariableNode");
 
-                        while (variablesNamesIterator.hasNext()) {
-                            Token variable = (Token) variablesNamesIterator.next();
+                        while (VariableNodesNamesIterator.hasNext()) {
+                            Token VariableNode = (Token) VariableNodesNamesIterator.next();
 
-                            logger.debug(variable);
+                            logger.debug(VariableNode);
 
-                            if (!variables.containsKey(variable.getName())) {
-                                variables.put(variable.getName(), astFactory.createStringVariable(variable.getName()));
+                            if (!variables.containsKey(VariableNode.getName())) {
+                                variables.put(VariableNode.getName(), astFactory.createStringVariable(VariableNode.getName()));
                             } else {
-                                throw new ParseException("variable '" + variable.getName() + "'is defined 2times!", lexan.getLineNumber());
+                                throw new ParseException("VariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
                         }
 
-                        variablesNames.clear();
+                        variableNames.clear();
                         break;
                     case REAL:
 
-                        logger.debug("REAL variable");
+                        logger.debug("REAL VariableNode");
 
-                        while (variablesNamesIterator.hasNext()) {
-                            Token variable = (Token) variablesNamesIterator.next();
+                        while (VariableNodesNamesIterator.hasNext()) {
+                            Token VariableNode = (Token) VariableNodesNamesIterator.next();
 
-                            logger.debug(variable);
+                            logger.debug(VariableNode);
 
-                            if (!variables.containsKey(variable.getName())) {
-                                variables.put(variable.getName(), astFactory.createRealVariable(variable.getName()));
+                            if (!variables.containsKey(VariableNode.getName())) {
+                                variables.put(VariableNode.getName(), astFactory.createRealVariable(VariableNode.getName()));
                             } else {
-                                throw new ParseException("variable '" + variable.getName() + "'is defined 2times!", lexan.getLineNumber());
+                                throw new ParseException("VariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
                         }
 
-                        variablesNames.clear();
+                        variableNames.clear();
                         break;
                     default:
                         throw new ParseException("type expected", lexan.getLineNumber());
@@ -207,7 +206,7 @@ public class Parser {
 
                 switch (readToken().getType()) {
                     case BEGIN:
-                        variablesParsed = true;
+                        VariableNodesParsed = true;
                     case ID:
                         setTokenPushed(true);
                     case VAR:
@@ -230,12 +229,12 @@ public class Parser {
 
     }
 
-    public Statement mainBegin() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
-        BlockInterface block = getAstFactory().createMainBlock();
+    public StatementNode mainBegin() throws IOException, ParseException, LexicalException, NotEnoughtParametersException {
 
+        List<StatementNode> statements = new ArrayList<>();
         while (!readToken().isEnd()) {
 
-            Statement st = parseStatement();
+            StatementNode st = parseStatement();
 
             logger.debug(currentToken);
 
@@ -245,9 +244,8 @@ public class Parser {
 			}
              */
             if (st != null) {
-                block.add(st);
+                statements.add(st);
             }
-
             if (!readToken().isSemicolon()) {
                 logger.error("expected semicolon");
                 throw new ParseException("Expected ';'. Have '" + currentToken + "'", lexan.getLineNumber());
@@ -257,15 +255,17 @@ public class Parser {
         if (!readToken().isDot()) {
             throw new ParseException('.', lexan.getLineNumber());
         }
-
+        StatementNode[] statementArray = new StatementNode[statements.size()];
+        statementArray = statements.toArray(statementArray);
+        StatementNode block = getAstFactory().createMainBlock(statementArray);
         return block;
     }
 
-    public Statement parseBegin() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
-        BlockInterface block = astFactory.createBlock();
+    public StatementNode parseBegin() throws IOException, ParseException, LexicalException, NotEnoughtParametersException {
+        List<StatementNode> statements = new ArrayList<>();
         while (!readToken().isEnd()) {
 
-            Statement st = parseStatement();
+            StatementNode st = parseStatement();
 
             logger.debug(currentToken);
             /*
@@ -275,7 +275,7 @@ public class Parser {
              */
 
             if (st != null) {
-                block.add(st);
+                statements.add(st);
             }
 
             if (!readToken().isSemicolon()) {
@@ -283,16 +283,18 @@ public class Parser {
             }
 
         }
-
+        StatementNode[] statementArray = new StatementNode[statements.size()];
+        statementArray = statements.toArray(statementArray);
+        StatementNode block = astFactory.createBlock(statementArray);
         return block;
     }
 
-    private List<Expression> parseProcedureParameters() throws IOException, LexicalException, ParseException, UnknowVariableNameException {
+    private List<ExpressionNode> parseProcedureNodeParameters() throws IOException, LexicalException, ParseException, UnknownVariableNameException {
         if (readToken().isRightParentie()) {
             return null;
         }
 
-        List<Expression> parameters = new ArrayList<>();
+        List<ExpressionNode> parameters = new ArrayList<>();
 
         boolean hasMoreParameters = true;
 
@@ -307,7 +309,7 @@ public class Parser {
         return parameters;
     }
 
-    private Statement parseStatement() throws IOException, LexicalException, UnknowVariableNameException, ParseException, UnknowProcedureNameException, NotEnoughtParametersException {
+    private StatementNode parseStatement() throws IOException, LexicalException, ParseException, NotEnoughtParametersException, UnknownVariableNameException, UnknownProcedureNameException {
         logger.debug(currentToken);
 
         switch (currentToken.getType()) {
@@ -316,12 +318,12 @@ public class Parser {
 
                 switch (readToken().getType()) {
                     case ASSIGMENT:
-                        return parseAssigment(checkAndReturnVariable(name));
+                        return parseAssigment(checkAndReturnVariableNode(name));
                     // procedure
                     case LPAREN:
-                        ProcedureInterface procedure = checkAndReturnProcedure(name);
-
-                        procedure.setParameters(parseProcedureParameters());
+                        ProcedureNode procedure = checkAndReturnProcedureNode(name);
+                        // TODO
+                        procedure.setParameters(parseProcedureNodeParameters());
 
                         if (!currentToken.isRightParentie()) {
                             logger.error(currentToken);
@@ -357,30 +359,31 @@ public class Parser {
         }
     }
 
-    private Statement parseWhile() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
-        Expression ex = parseExpression();
+    private StatementNode parseWhile() throws IOException, ParseException, LexicalException, NotEnoughtParametersException,
+            UnknownVariableNameException, UnknownProcedureNameException {
+        ExpressionNode ex = parseExpression();
 
         if (!readToken().isDo()) {
             throw new ParseException("Expected 'do'", lexan.getLineNumber());
         }
 
         readToken();
-        Statement st = parseStatement();
+        StatementNode st = parseStatement();
 
         return astFactory.createWhile(ex, st);
         // return new While(ex, st);
     }
 
-    private Statement parseIf() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
-        Expression ex = parseExpression();
+    private StatementNode parseIf() throws IOException, ParseException, LexicalException, NotEnoughtParametersException, UnknownVariableNameException, UnknownProcedureNameException {
+        ExpressionNode ex = parseExpression();
 
         if (!readToken().isThen()) {
             throw new ParseException("Expected 'then'", lexan.getLineNumber());
         }
 
         readToken();
-        Statement st1 = parseStatement();
-        Statement st2 = null;
+        StatementNode st1 = parseStatement();
+        StatementNode st2 = null;
 
         logger.debug(currentToken);
 
@@ -397,14 +400,16 @@ public class Parser {
         //return new If(ex, st1, st2);
     }
 
-    private Statement parseFor() throws IOException, ParseException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
+    private StatementNode parseFor() throws IOException, ParseException, LexicalException, NotEnoughtParametersException,
+            UnknownVariableNameException, UnknownProcedureNameException {
         readToken();
 
-        Statement assignmentStatement = parseStatement();
+        StatementNode assignmentStatement = parseStatement();
 
-        if (!(assignmentStatement instanceof Assignment)) {
+        //TODO: Find a better way of checking it.
+        /*if (!(assignmentStatement instanceof Assignment)) {
             throw new ParseException("Expected assignment statement!", lexan.getLineNumber());
-        }
+        }*/
 
         boolean downto = false;
 
@@ -421,7 +426,7 @@ public class Parser {
 
         readToken();
 
-        Expression finalExpression = parseExpression();
+        ExpressionNode finalExpression = parseExpression();
 
         if (!currentToken.isDo()) {
             throw new ParseException("Expected 'do'", lexan.getLineNumber());
@@ -429,7 +434,7 @@ public class Parser {
 
         setTokenPushed(false);
         readToken();
-        Statement executeStatement = parseStatement();
+        StatementNode executeStatement = parseStatement();
 
         logger.debug(currentToken);
 
@@ -442,26 +447,26 @@ public class Parser {
         }
     }
 
-    private VariableInterface checkAndReturnVariable(String name) throws UnknowVariableNameException {
-        VariableInterface variable = getGlobalVariable(name);
+    private VariableNode checkAndReturnVariableNode(String name) throws UnknownVariableNameException {
+        VariableNode VariableNode = getGlobalVariableNode(name);
 
-        if (variable == null) {
-            throw new UnknowVariableNameException(name + ":" + lexan.getLineNumber());
+        if (VariableNode == null) {
+            throw new UnknownVariableNameException(name + ":" + lexan.getLineNumber());
         }
 
-        return variable;
+        return VariableNode;
     }
 
-    private ProcedureInterface checkAndReturnProcedure(String name) throws UnknowProcedureNameException {
-        ProcedureInterface procedure = getGlobalProcedure(name);
+    private ProcedureNode checkAndReturnProcedureNode(String name) throws UnknownProcedureNameException {
+        ProcedureNode procedure = getGlobalProcedureNode(name);
 
         if (procedure == null) {
-            throw new UnknowProcedureNameException(name + ":" + lexan.getLineNumber());
+            throw new UnknownProcedureNameException(name + ":" + lexan.getLineNumber());
         }
 
         procedure = procedure.clone();
         /*try {
-            procedure = (ProcedureInterface) procedure.clone();
+            procedure = (ProcedureNode) procedure.clone();
         } catch (CloneNotSupportedException e) {
             // empty, cloning is SUPPORTED ALWAYS
         }*/
@@ -480,7 +485,7 @@ public class Parser {
         }
     }
 
-    private Expression primaryExpression() throws IOException, LexicalException, UnknowVariableNameException, ParseException {
+    private ExpressionNode primaryExpression() throws IOException, LexicalException, UnknownVariableNameException, ParseException {
         switch (readToken().getType()) {
             case VAL_INTEGER:
                 logger.debug("parseExpression:interger value " + currentToken.getIntegerValue());
@@ -499,7 +504,7 @@ public class Parser {
 
             case ID:
                 logger.debug("parseExpression:id name " + currentToken);
-                return checkAndReturnVariable(currentToken.getName());
+                return checkAndReturnVariableNode(currentToken.getName());
 
             // Unary minus
             case MINUS:
@@ -509,7 +514,7 @@ public class Parser {
 
             case LPAREN:
                 logger.debug("parseExpression:lparen");
-                Expression ex = astFactory.createParenthesis(parseExpression());
+                ExpressionNode ex = astFactory.createParenthesis(parseExpression());
                 //Expression ex = new Parenties(parseExpression());
 
                 if (!readToken().isRightParentie()) {
@@ -525,8 +530,8 @@ public class Parser {
         throw new ParseException("value expected!", lexan.getLineNumber());
     }
 
-    private Expression parseOperatorExpression() throws IOException, ParseException, LexicalException, UnknowVariableNameException {
-        Expression ex = primaryExpression();
+    private ExpressionNode parseOperatorExpression() throws IOException, ParseException, LexicalException, UnknownVariableNameException {
+        ExpressionNode ex = primaryExpression();
 
         logger.debug(ex);
 
@@ -572,8 +577,8 @@ public class Parser {
         return ex;
     }
 
-    private Expression parseCompareExpression() throws IOException, LexicalException, UnknowVariableNameException, ParseException {
-        Expression ex = parseOperatorExpression();
+    private ExpressionNode parseCompareExpression() throws IOException, LexicalException, UnknownVariableNameException, ParseException {
+        ExpressionNode ex = parseOperatorExpression();
 
         logger.debug(ex);
 
@@ -624,8 +629,8 @@ public class Parser {
         return ex;
     }
 
-    private Expression parseExpression() throws IOException, LexicalException, UnknowVariableNameException, ParseException {
-        Expression ex;
+    private ExpressionNode parseExpression() throws IOException, LexicalException, UnknownVariableNameException, ParseException {
+        ExpressionNode ex;
         if (readToken().isNot()) {
             ex = astFactory.createNotOperator(parseCompareExpression());
             //ex = new NotOperator(parseCompareExpression());
@@ -670,8 +675,8 @@ public class Parser {
         return ex;
     }
 
-    private Statement parseAssigment(VariableInterface variable) throws IOException, LexicalException, ParseException, UnknowVariableNameException {
-        Statement st = astFactory.createAssignment(variable, parseExpression()); //new Assignment(variable, parseExpression());
+    private StatementNode parseAssigment(VariableNode VariableNode) throws IOException, LexicalException, ParseException, UnknownVariableNameException {
+        StatementNode st = astFactory.createAssignment(VariableNode, parseExpression()); //new Assignment(VariableNode, parseExpression());
 
         logger.debug("parseAssigment token:" + currentToken);
         /*
@@ -682,7 +687,7 @@ public class Parser {
         return st;
     }
 
-    public Statement parse() throws ParseException, IOException, LexicalException, UnknowVariableNameException, UnknowProcedureNameException, NotEnoughtParametersException {
+    public StatementNode parse() throws ParseException, IOException, LexicalException, UnknownVariableNameException, UnknownProcedureNameException, NotEnoughtParametersException {
         boolean parsedAll = false;
 
         while (!parsedAll) {
@@ -691,16 +696,16 @@ public class Parser {
                     parseProgram();
                     break;
                 case VAR:
-                    LinkedHashMap<String, VariableInterface> localVariables;
-                    localVariables = parseVar();
+                    LinkedHashMap<String, VariableNode> localVariableNodes;
+                    localVariableNodes = parseVar();
 
-                    if (globalVariables.isEmpty()) {
-                        globalVariables = localVariables;
+                    if (globalVariableNodes.isEmpty()) {
+                        globalVariableNodes = localVariableNodes;
                     } else {
-                        VariableInterface collisionVariable = getVariablesCollision(globalVariables, localVariables);
+                        VariableNode collisionVariableNode = getVariableNodesCollision(globalVariableNodes, localVariableNodes);
 
-                        if (collisionVariable != null) {
-                            throw new ParseException("variable'" + collisionVariable.getName() + "' already defined");
+                        if (collisionVariableNode != null) {
+                            throw new ParseException("VariableNode'" + collisionVariableNode.getName() + "' already defined");
                         }
                     }
                     break;
@@ -741,9 +746,9 @@ public class Parser {
         this.tokenPushed = tokenPushed;
     }
 
-    public void run() throws UnknowExpressionTypeException, NotUsableOperatorException {
+    public void run() throws UnknownExpressionTypeException, NotUsableOperatorException {
         logger.debug("Executing entrypoint...");
 //		logger.debug(entryPoint);
-        entryPoint.execute();
+        ((Statement) entryPoint).execute();
     }
 }
