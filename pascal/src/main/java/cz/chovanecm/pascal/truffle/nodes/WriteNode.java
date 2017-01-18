@@ -22,7 +22,15 @@ public class WriteNode extends BuiltinProcedureNode {
     @Override
     @ExplodeLoop
     public void executeStatement(VirtualFrame frame) {
+        boolean firstPass = true;
         for (ExpressionNode parameter : parameters) {
+            // NOTE: Should we use ConditionProfile?
+            if (!firstPass) {
+                // Pritn separating space between argumetns.
+                print(" ");
+            } else {
+                firstPass = false;
+            }
             print(parameter.executeGeneric(frame));
         }
     }

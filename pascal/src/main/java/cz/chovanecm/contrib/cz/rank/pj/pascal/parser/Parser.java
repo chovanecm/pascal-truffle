@@ -498,7 +498,7 @@ public class Parser {
             case VAL_INTEGER:
                 logger.debug("parseExpression:interger value " + currentToken.getIntegerValue());
                 return astFactory.createConstant(currentToken.getIntegerValue());
-            //return new Constant(currentToken.getIntegerValue());
+            //return new Constant(currentToken.getLongValue());
 
             case VAL_DOUBLE:
                 logger.debug("parseExpression:double value " + currentToken.getDoubleValue());
@@ -518,7 +518,7 @@ public class Parser {
             case MINUS:
                 logger.debug("parseExpression:token " + currentToken);
                 return astFactory.createUnaryMinus(primaryExpression());
-            //return new UnaryMinus(primaryExpression());
+            //return new UnaryMinusNode(primaryExpression());
 
             case LPAREN:
                 logger.debug("parseExpression:lparen");
