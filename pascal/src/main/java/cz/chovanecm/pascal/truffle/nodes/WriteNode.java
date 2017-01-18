@@ -23,7 +23,7 @@ public class WriteNode extends BuiltinProcedureNode {
     @ExplodeLoop
     public void executeStatement(VirtualFrame frame) {
         for (ExpressionNode parameter : parameters) {
-            print(parameter.executeGeneric(frame));
+            print(parameter.execute(frame));
         }
     }
 

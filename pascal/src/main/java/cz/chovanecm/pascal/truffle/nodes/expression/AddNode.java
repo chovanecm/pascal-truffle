@@ -1,14 +1,13 @@
 package cz.chovanecm.pascal.truffle.nodes.expression;
 
 import com.oracle.truffle.api.dsl.Specialization;
-import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
 /**
  * Created by martin on 1/18/17.
  */
 @NodeInfo(shortName = "add")
-public class AddNode extends BinaryNode {
+public abstract class AddNode extends BinaryNode {
 
     @Specialization
     public long add(long left, long right) {
@@ -35,8 +34,4 @@ public class AddNode extends BinaryNode {
         return left + right;
     }
 
-    @Override
-    public Object executeGeneric(VirtualFrame frame) {
-        return null;
-    }
 }

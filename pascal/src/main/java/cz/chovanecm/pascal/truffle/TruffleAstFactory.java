@@ -2,10 +2,7 @@ package cz.chovanecm.pascal.truffle;
 
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
-import cz.chovanecm.pascal.truffle.nodes.expression.AddNodeGen;
-import cz.chovanecm.pascal.truffle.nodes.expression.ParenthesisExpressionNodeGen;
-import cz.chovanecm.pascal.truffle.nodes.expression.SubtractNodeGen;
-import cz.chovanecm.pascal.truffle.nodes.expression.UnaryMinusNodeGen;
+import cz.chovanecm.pascal.truffle.nodes.expression.*;
 
 /**
  * Created by martin on 1/17/17.
@@ -53,17 +50,17 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ExpressionNode createConstant(Integer integerValue) {
-        return new ConstantNode(integerValue.longValue());
+        return ConstantNodeGen.create(integerValue.longValue());
     }
 
     @Override
     public ExpressionNode createConstant(Double doubleValue) {
-        return new ConstantNode(doubleValue);
+        return ConstantNodeGen.create(doubleValue);
     }
 
     @Override
     public ExpressionNode createConstant(String stringValue) {
-        return new ConstantNode(stringValue);
+        return ConstantNodeGen.create(stringValue);
     }
 
     @Override
@@ -103,12 +100,12 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ExpressionNode createMultiplicationOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return MultiplyNodeGen.create(left, right);
     }
 
     @Override
     public ExpressionNode createDivisionOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return DivisionNodeGen.create(left, right);
     }
 
     @Override
