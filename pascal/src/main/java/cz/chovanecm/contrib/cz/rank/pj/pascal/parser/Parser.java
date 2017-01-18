@@ -557,7 +557,7 @@ public class Parser {
                     operatorFound = true;
                     break;
                 case MINUS:
-                    ex = astFactory.createMinusOperator(ex, parseOperatorExpression());
+                    ex = astFactory.createMinusOperator(ex, primaryExpression());
                     //ex = new MinusOperator(ex, parseOperatorExpression());
                     operatorFound = true;
                     break;

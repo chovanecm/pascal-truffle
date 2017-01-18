@@ -3,6 +3,8 @@ package cz.chovanecm.pascal.truffle;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
 import cz.chovanecm.pascal.truffle.nodes.expression.AddNodeGen;
+import cz.chovanecm.pascal.truffle.nodes.expression.ParenthesisExpressionNodeGen;
+import cz.chovanecm.pascal.truffle.nodes.expression.SubtractNodeGen;
 import cz.chovanecm.pascal.truffle.nodes.expression.UnaryMinusNodeGen;
 
 /**
@@ -70,8 +72,8 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public ExpressionNode createParenthesis(ExpressionNode parseExpression) {
-        return null;
+    public ExpressionNode createParenthesis(ExpressionNode expression) {
+        return ParenthesisExpressionNodeGen.create(expression);
     }
 
     @Override
@@ -96,7 +98,7 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ExpressionNode createMinusOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return SubtractNodeGen.create(left, right);
     }
 
     @Override

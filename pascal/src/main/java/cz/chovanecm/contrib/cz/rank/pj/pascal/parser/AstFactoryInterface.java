@@ -45,7 +45,7 @@ public interface AstFactoryInterface {
 
     public ExpressionNode createUnaryMinus(ExpressionNode primaryExpression);
 
-    public ExpressionNode createParenthesis(ExpressionNode parseExpression);
+    public ExpressionNode createParenthesis(ExpressionNode expression);
 
     public ReadVariableNode createIntegerVariable(String id);
 
