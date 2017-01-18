@@ -3,14 +3,20 @@ package cz.chovanecm.pascal.truffle.nodes;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
+import com.oracle.truffle.api.nodes.NodeInfo;
 
 /**
  * Created by martin on 1/17/17.
  */
-public abstract class WriteNode extends BuiltinProcedureNode {
+@NodeInfo(shortName = "write")
+public class WriteNode extends BuiltinProcedureNode {
 
     public WriteNode(ExpressionNode[] parameters) {
         super(parameters);
+    }
+
+    public WriteNode() {
+        super(new ExpressionNode[]{});
     }
 
     @Override
@@ -23,6 +29,6 @@ public abstract class WriteNode extends BuiltinProcedureNode {
 
     @CompilerDirectives.TruffleBoundary
     public void print(Object value) {
-        getContext().getOut().print(value);
+        System.out.print(value);
     }
 }

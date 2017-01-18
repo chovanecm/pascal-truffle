@@ -17,5 +17,5 @@ public abstract class BuiltinProcedureNode extends ProcedureNode {
     /**
      * Get current {@link PascalContext}
      */
-    public abstract PascalContext getContext();
+    //public abstract PascalContext getContext();
 }

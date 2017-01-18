@@ -149,7 +149,7 @@ public class Parser {
                 switch (readToken().getType()) {
                     case INTEGER:
 
-                        logger.debug("INTEGER ReadVariableNode");
+                        logger.debug("INTEGER Variable");
 
                         while (VariableNodesNamesIterator.hasNext()) {
                             Token VariableNode = (Token) VariableNodesNamesIterator.next();
@@ -157,6 +157,7 @@ public class Parser {
                             logger.debug(VariableNode);
 
                             if (!variables.containsKey(VariableNode.getName())) {
+                                //TODO: This should be treaded as declaration only
                                 variables.put(VariableNode.getName(), astFactory.createIntegerVariable(VariableNode.getName()));
                             } else {
                                 throw new ParseException("ReadVariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
@@ -312,7 +313,9 @@ public class Parser {
             }
         } while (hasMoreParameters);
 
-        return (ExpressionNode[]) parameters.toArray();
+        ExpressionNode[] parameterArray = new ExpressionNode[parameters.size()];
+        parameterArray = parameters.toArray(parameterArray);
+        return parameterArray;
     }
 
     private StatementNode parseStatement() throws IOException, LexicalException, ParseException, NotEnoughtParametersException, UnknownVariableNameException, UnknownProcedureNameException {
@@ -324,7 +327,7 @@ public class Parser {
 
                 switch (readToken().getType()) {
                     case ASSIGMENT:
-                        return parseAssigment(checkAndReturnVariableNode(name));
+                        return parseAssigment(checkAndReturnVariableNode(name).getName());
                     // procedure
                     case LPAREN:
                         ProcedureNode procedure = checkAndReturnProcedureNode(name, parseProcedureNodeParameters());
@@ -680,7 +683,7 @@ public class Parser {
         return ex;
     }
 
-    private StatementNode parseAssigment(ReadVariableNode variable) throws IOException, LexicalException, ParseException, UnknownVariableNameException {
+    private StatementNode parseAssigment(String variable) throws IOException, LexicalException, ParseException, UnknownVariableNameException {
         StatementNode st = astFactory.createAssignment(variable, parseExpression()); //new Assignment(ReadVariableNode, parseExpression());
 
         logger.debug("parseAssigment token:" + currentToken);

@@ -27,7 +27,7 @@ public abstract class ProcedureNode extends StatementNode {
     public ProcedureNode newInstance(ExpressionNode[] parameters) {
         try {
             Constructor<? extends ProcedureNode> constructor = getClass().getConstructor(new Class[]{ExpressionNode[].class});
-            return constructor.newInstance(parameters);
+            return constructor.newInstance(new Object[]{parameters});
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             System.err.println("Really weird!!!!");
             e.printStackTrace();

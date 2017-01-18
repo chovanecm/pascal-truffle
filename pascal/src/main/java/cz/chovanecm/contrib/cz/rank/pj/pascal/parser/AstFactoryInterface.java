@@ -27,7 +27,7 @@ public interface AstFactoryInterface {
 
     StatementNode createBlock(StatementNode[] statements);
 
-    public StatementNode createAssignment(ReadVariableNode variable, ExpressionNode expression);
+    public StatementNode createAssignment(String variable, ExpressionNode expression);
 
     public StatementNode createWhile(ExpressionNode expression, StatementNode statement);
 

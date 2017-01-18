@@ -1,10 +1,7 @@
 package cz.chovanecm.pascal.truffle;
 
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
-import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
-import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
-import cz.chovanecm.pascal.truffle.nodes.ReadVariableNode;
-import cz.chovanecm.pascal.truffle.nodes.StatementNode;
+import cz.chovanecm.pascal.truffle.nodes.*;
 
 /**
  * Created by martin on 1/17/17.
@@ -12,21 +9,21 @@ import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 public class TruffleAstFactory implements AstFactoryInterface {
     @Override
     public ProcedureNode createWriteLnProcedure() {
-        return null;
+        return new WritelnNode();
     }
 
     @Override
     public ProcedureNode createWriteProcedure() {
-        return null;
+        return new WriteNode();
     }
 
     @Override
     public StatementNode createBlock(StatementNode[] statements) {
-        return null;
+        return new BlockNode(statements);
     }
 
     @Override
-    public StatementNode createAssignment(ReadVariableNode variable, ExpressionNode expression) {
+    public StatementNode createAssignment(String variable, ExpressionNode expression) {
         return null;
     }
 
@@ -52,7 +49,7 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ExpressionNode createConstant(Integer integerValue) {
-        return null;
+        return new ConstantNode(integerValue);
     }
 
     @Override
