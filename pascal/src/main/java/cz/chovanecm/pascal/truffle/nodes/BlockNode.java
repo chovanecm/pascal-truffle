@@ -1,5 +1,5 @@
-/* 
- * Copyright 2017 Martin Chovanec.
+/*
+ * Copyright 2017 martin.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,29 @@
  */
 package cz.chovanecm.pascal.truffle.nodes;
 
-import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
-import com.oracle.truffle.api.nodes.RootNode;
-import com.oracle.truffle.api.source.SourceSection;
-import cz.chovanecm.pascal.truffle.PascalLanguage;
-
 
 /**
  *
  * @author martin
  */
-@NodeInfo(language = "Pascal", description = "Root node of Pascal programs")
-public class PascalRootNode extends RootNode {
+@NodeInfo(language = "Pascal")
+public class BlockNode extends StatementNode{
+    @Children
+    private final StatementNode [] statements;
 
-    @Child
-    StatementNode node;
-
-    public PascalRootNode(SourceSection sourceSection, FrameDescriptor frameDescriptor, StatementNode entryPoint) {
-        super(PascalLanguage.class, sourceSection, frameDescriptor);
-        this.node = entryPoint;
+    public BlockNode(StatementNode[] statements) {
+        this.statements = statements;
     }
+
 
     @Override
-    public Object execute(VirtualFrame frame) {
-        node.execute(frame);
-        return null;
+    @ExplodeLoop
+    public void execute(VirtualFrame frame) {
+        for (StatementNode statement : statements) {
+            statement.execute(frame);
+        }
     }
-
 }

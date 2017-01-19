@@ -19,8 +19,8 @@ public class WritelnNode extends WriteNode {
     }
 
     @Override
-    public void executeStatement(VirtualFrame frame) {
-        super.executeStatement(frame);
+    public void execute(VirtualFrame frame) {
+        super.execute(frame);
         println();
     }
 
