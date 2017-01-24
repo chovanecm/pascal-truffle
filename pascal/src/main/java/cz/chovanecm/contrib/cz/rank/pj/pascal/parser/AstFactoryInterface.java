@@ -51,6 +51,8 @@ public interface AstFactoryInterface {
 
     public ExpressionNode createConstant(String stringValue);
 
+    public ExpressionNode createConstant(Boolean booleanValue);
+
     public ExpressionNode createUnaryMinus(ExpressionNode primaryExpression);
 
     public ExpressionNode createParenthesis(ExpressionNode expression);

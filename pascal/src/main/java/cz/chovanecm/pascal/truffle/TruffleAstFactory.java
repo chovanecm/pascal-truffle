@@ -4,6 +4,7 @@ import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
 import cz.chovanecm.pascal.truffle.nodes.expression.*;
 import cz.chovanecm.pascal.truffle.nodes.relational.EqualsOperatorNodeGen;
+import cz.chovanecm.pascal.truffle.nodes.relational.LessThanOperatorNodeGen;
 import cz.chovanecm.pascal.truffle.nodes.variables.*;
 
 import java.util.List;
@@ -74,6 +75,11 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
+    public ExpressionNode createConstant(Boolean booleanValue) {
+        return ConstantNodeGen.create(booleanValue);
+    }
+
+    @Override
     public ExpressionNode createUnaryMinus(ExpressionNode primaryExpression) {
         return UnaryMinusNodeGen.create(primaryExpression);
     }
@@ -120,7 +126,7 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ExpressionNode createLessOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return LessThanOperatorNodeGen.create(left, right);
     }
 
     @Override

@@ -507,6 +507,8 @@ public class Parser {
                 logger.debug("parseExpression:string value " + currentToken.getStringValue());
                 return astFactory.createConstant(currentToken.getStringValue());
             //return new Constant(currentToken.getStringValue());
+            case VAL_BOOLEAN:
+                return astFactory.createConstant(currentToken.getBooleanValue());
 
             case ID:
                 logger.debug("parseExpression:id name " + currentToken);
