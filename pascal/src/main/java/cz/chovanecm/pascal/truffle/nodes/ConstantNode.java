@@ -15,26 +15,22 @@
  */
 package cz.chovanecm.pascal.truffle.nodes;
 
+import com.oracle.truffle.api.dsl.NodeField;
+import com.oracle.truffle.api.dsl.NodeFields;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.Node;
-import cz.rank.pj.pascal.Expression;
 
 /**
  *
  * @author martin
  */
+@NodeFields({@NodeField(name = "value", type = Object.class)})
 public abstract class ConstantNode extends ExpressionNode {
 
-    private final Object value;
-
-    public ConstantNode(Object value) {
-        this.value = value;
-    }
-
+    public abstract Object getValue();
 
     @Specialization
     public Object executeGeneric(VirtualFrame frame) {
-        return value;
+        return getValue();
     }
 }

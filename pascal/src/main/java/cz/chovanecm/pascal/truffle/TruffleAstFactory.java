@@ -3,6 +3,7 @@ package cz.chovanecm.pascal.truffle;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
 import cz.chovanecm.pascal.truffle.nodes.expression.*;
+import cz.chovanecm.pascal.truffle.nodes.logical.OrOperator;
 import cz.chovanecm.pascal.truffle.nodes.relational.*;
 import cz.chovanecm.pascal.truffle.nodes.variables.*;
 
@@ -104,6 +105,11 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
+    public DeclareVariableNode createBooleanVariable(String id) {
+        return new DeclareBooleanVariable(id);
+    }
+
+    @Override
     public ExpressionNode createPlusOperator(ExpressionNode left, ExpressionNode right) {
         return AddNodeGen.create(left, right);
     }
@@ -165,7 +171,7 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ExpressionNode createOrOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return new OrOperator(left, right);
     }
 
     @Override

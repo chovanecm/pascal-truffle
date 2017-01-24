@@ -63,6 +63,8 @@ public interface AstFactoryInterface {
 
     public DeclareVariableNode createRealVariable(String id);
 
+    public DeclareVariableNode createBooleanVariable(String id);
+
     public ExpressionNode createPlusOperator(ExpressionNode left, ExpressionNode right);
 
     public ExpressionNode createMinusOperator(ExpressionNode left, ExpressionNode right);
