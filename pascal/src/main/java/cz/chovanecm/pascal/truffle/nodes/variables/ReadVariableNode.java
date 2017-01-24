@@ -4,6 +4,7 @@ import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.NodeFields;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.FrameUtil;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
@@ -16,9 +17,47 @@ public abstract class ReadVariableNode extends ExpressionNode {
 
     public abstract String getVariableName();
 
-    @Specialization
-    public double readReal(VirtualFrame frame) {
+    @Specialization(guards = "isDouble(frame)")
+    public double readDouble(VirtualFrame frame) {
         FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
         return FrameUtil.getDoubleSafe(frame, slot);
+    }
+
+    @Specialization(guards = "isLong(frame)")
+    public long readLong(VirtualFrame frame) {
+        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        return FrameUtil.getLongSafe(frame, slot);
+    }
+
+    @Specialization(guards = "isBoolean(frame)")
+    public boolean readBoolean(VirtualFrame frame) {
+        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        return FrameUtil.getBooleanSafe(frame, slot);
+    }
+
+    @Specialization(guards = "isString(frame)")
+    public String readString(VirtualFrame frame) {
+        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        return (String) FrameUtil.getObjectSafe(frame, slot);
+    }
+
+    public boolean isBoolean(VirtualFrame frame) {
+        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        return slot.getKind() == FrameSlotKind.Boolean;
+    }
+
+    public boolean isLong(VirtualFrame frame) {
+        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        return slot.getKind() == FrameSlotKind.Long;
+    }
+
+    public boolean isDouble(VirtualFrame frame) {
+        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        return slot.getKind() == FrameSlotKind.Double;
+    }
+
+    public boolean isString(VirtualFrame frame) {
+        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        return slot.getKind() == FrameSlotKind.Object;
     }
 }
