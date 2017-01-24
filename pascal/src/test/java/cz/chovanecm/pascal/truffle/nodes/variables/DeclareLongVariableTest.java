@@ -7,6 +7,7 @@ import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -36,12 +37,11 @@ public class DeclareLongVariableTest {
 
         assert frameDescriptor.findFrameSlot(var1) != null;
         FrameSlot slot = frameDescriptor.findFrameSlot(var1);
-        assert slot.getKind() == FrameSlotKind.Long;
-
-        assert frameDescriptor.findFrameSlot(var2) != null;
+        Assert.assertEquals(FrameSlotKind.Long, slot.getKind());
+        Assert.assertNotEquals(null, frameDescriptor.findFrameSlot(var2));
         FrameSlot slot2 = frameDescriptor.findFrameSlot(var2);
-        assert slot2.getKind() == FrameSlotKind.Long;
-        assert !slot.equals(slot2);
+        Assert.assertEquals(FrameSlotKind.Long, slot2.getKind());
+        Assert.assertFalse(slot.equals(slot2));
 
     }
 
