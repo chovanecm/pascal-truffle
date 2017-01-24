@@ -3,8 +3,7 @@ package cz.chovanecm.pascal.truffle;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
 import cz.chovanecm.pascal.truffle.nodes.expression.*;
-import cz.chovanecm.pascal.truffle.nodes.relational.EqualsOperatorNodeGen;
-import cz.chovanecm.pascal.truffle.nodes.relational.LessThanOperatorNodeGen;
+import cz.chovanecm.pascal.truffle.nodes.relational.*;
 import cz.chovanecm.pascal.truffle.nodes.variables.*;
 
 import java.util.List;
@@ -131,7 +130,7 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ExpressionNode createGreaterOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return GreaterThanOperatorNodeGen.create(left, right);
     }
 
     @Override
@@ -141,17 +140,17 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ExpressionNode createLessEqualOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return LessOrEqualOperatorNodeGen.create(left, right);
     }
 
     @Override
     public ExpressionNode createGreaterEqualOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return GreaterOrEqualOperatorNodeGen.create(left, right);
     }
 
     @Override
     public ExpressionNode createNotEqualOperator(ExpressionNode left, ExpressionNode right) {
-        return null;
+        return NotEqualsOperatorNodeGen.create(left, right);
     }
 
     @Override
