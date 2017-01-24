@@ -3,11 +3,16 @@ package cz.chovanecm.pascal.truffle;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
 import cz.chovanecm.pascal.truffle.nodes.expression.*;
+import cz.chovanecm.pascal.truffle.nodes.variables.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.List;
 
 /**
  * Created by martin on 1/17/17.
  */
 public class TruffleAstFactory implements AstFactoryInterface {
+
     @Override
     public ProcedureNode createWriteLnProcedure() {
         return new WritelnNode();
@@ -24,8 +29,13 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public StatementNode createAssignment(String variable, ExpressionNode expression) {
-        return null;
+    public StatementNode createBlock(List<StatementNode> statements) {
+        return new BlockNode(statements);
+    }
+
+    @Override
+    public StatementNode createGlobalAssignment(String variable, ExpressionNode expression) {
+        return WriteVariableNodeGen.create(expression, variable);
     }
 
     @Override
@@ -49,8 +59,8 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public ExpressionNode createConstant(Integer integerValue) {
-        return ConstantNodeGen.create(integerValue.longValue());
+    public ExpressionNode createConstant(Long longValue) {
+        return ConstantNodeGen.create(longValue);
     }
 
     @Override
@@ -74,18 +84,18 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public ReadVariableNode createIntegerVariable(String id) {
-        return null;
+    public DeclareVariableNode createIntegerVariable(String id) {
+        return new DeclareLongVariable(id);
     }
 
     @Override
-    public ReadVariableNode createStringVariable(String id) {
-        return null;
+    public DeclareVariableNode createStringVariable(String id) {
+        return new DeclareStringVariable(id);
     }
 
     @Override
-    public ReadVariableNode createRealVariable(String id) {
-        return null;
+    public DeclareVariableNode createRealVariable(String id) {
+        return new DeclareRealVariable(id);
     }
 
     @Override
@@ -151,5 +161,10 @@ public class TruffleAstFactory implements AstFactoryInterface {
     @Override
     public ExpressionNode createOrOperator(ExpressionNode left, ExpressionNode right) {
         return null;
+    }
+
+    @Override
+    public ExpressionNode createReadVariable(String id) {
+        throw new NotImplementedException();
     }
 }

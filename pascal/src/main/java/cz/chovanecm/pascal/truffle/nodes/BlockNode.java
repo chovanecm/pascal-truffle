@@ -19,6 +19,8 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
+import java.util.List;
+
 /**
  *
  * @author martin
@@ -32,6 +34,11 @@ public class BlockNode extends StatementNode{
         this.statements = statements;
     }
 
+    public BlockNode(List<StatementNode> statements) {
+        StatementNode[] statementArray = new StatementNode[statements.size()];
+        statementArray = statements.toArray(statementArray);
+        this.statements = statementArray;
+    }
 
     @Override
     @ExplodeLoop

@@ -41,7 +41,7 @@ public class PascalRootNode extends RootNode {
     @Override
     public Object execute(VirtualFrame frame) {
         node.execute(frame);
-        return null;
+        return frame;
     }
 
 }

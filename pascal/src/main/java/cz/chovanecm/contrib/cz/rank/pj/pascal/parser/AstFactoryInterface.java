@@ -8,8 +8,10 @@ package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
-import cz.chovanecm.pascal.truffle.nodes.ReadVariableNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
+import cz.chovanecm.pascal.truffle.nodes.variables.DeclareVariableNode;
+
+import java.util.List;
 
 /**
  *
@@ -25,9 +27,15 @@ public interface AstFactoryInterface {
         return createBlock(statements);
     }
 
+    default StatementNode createMainBlock(List<StatementNode> statements) {
+        return createBlock(statements);
+    }
+
     StatementNode createBlock(StatementNode[] statements);
 
-    public StatementNode createAssignment(String variable, ExpressionNode expression);
+    StatementNode createBlock(List<StatementNode> statements);
+
+    public StatementNode createGlobalAssignment(String variable, ExpressionNode expression);
 
     public StatementNode createWhile(ExpressionNode expression, StatementNode statement);
 
@@ -37,7 +45,7 @@ public interface AstFactoryInterface {
 
     public StatementNode createForTo(StatementNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
 
-    public ExpressionNode createConstant(Integer integerValue);
+    public ExpressionNode createConstant(Long integerValue);
 
     public ExpressionNode createConstant(Double doubleValue);
 
@@ -47,11 +55,11 @@ public interface AstFactoryInterface {
 
     public ExpressionNode createParenthesis(ExpressionNode expression);
 
-    public ReadVariableNode createIntegerVariable(String id);
+    public DeclareVariableNode createIntegerVariable(String id);
 
-    public ReadVariableNode createStringVariable(String id);
+    public DeclareVariableNode createStringVariable(String id);
 
-    public ReadVariableNode createRealVariable(String id);
+    public DeclareVariableNode createRealVariable(String id);
 
     public ExpressionNode createPlusOperator(ExpressionNode left, ExpressionNode right);
 
@@ -79,4 +87,5 @@ public interface AstFactoryInterface {
 
     public ExpressionNode createOrOperator(ExpressionNode left, ExpressionNode right);
 
+    ExpressionNode createReadVariable(String id);
 }

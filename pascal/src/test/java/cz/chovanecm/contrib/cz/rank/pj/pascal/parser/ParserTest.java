@@ -145,17 +145,17 @@ public class ParserTest extends TestCase {
 
         try {
             parser.parse();
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof StringVariable);
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof StringVariable);
 
-            ReadVariableNode = parser.getGlobalVariable("c");
-            assertEquals("c", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof RealVariable);
+            DeclareVariableNode = parser.getGlobalVariable("c");
+            assertEquals("c", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof RealVariable);
         } catch (IOException e) {
             fail(e.getMessage());
         } catch (ParseException e) {
@@ -173,13 +173,13 @@ public class ParserTest extends TestCase {
 
         try {
             parser.parse();
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
 
             parser.run();
 
-            assertEquals(1, (int) ReadVariableNode.getInteger());
+            assertEquals(1, (int) DeclareVariableNode.getInteger());
         } catch (IOException e) {
             fail(e.getMessage());
         } catch (ParseException e) {
@@ -197,13 +197,13 @@ public class ParserTest extends TestCase {
 
         try {
             parser.parse();
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
 
             parser.run();
 
-            assertEquals(1, (int) ReadVariableNode.getInteger());
+            assertEquals(1, (int) DeclareVariableNode.getInteger());
         } catch (IOException e) {
             fail(e.getMessage());
         } catch (ParseException e) {
@@ -221,13 +221,13 @@ public class ParserTest extends TestCase {
 
         try {
             parser.parse();
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
 
             parser.run();
 
-            assertEquals(1, (int) ReadVariableNode.getInteger());
+            assertEquals(1, (int) DeclareVariableNode.getInteger());
         } catch (IOException e) {
             fail(e.getMessage());
         } catch (ParseException e) {
@@ -247,20 +247,20 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(51, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(51, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(2, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(2, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("c");
-            assertEquals("c", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(4, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("c");
+            assertEquals("c", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(4, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -281,20 +281,20 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(-49, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(-49, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(0, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(0, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("c");
-            assertEquals("c", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(1, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("c");
+            assertEquals("c", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(1, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -315,20 +315,20 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(1, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(1, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(10, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(10, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("c");
-            assertEquals("c", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(100, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("c");
+            assertEquals("c", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(100, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -349,20 +349,20 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(30, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(30, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(50, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(50, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("c");
-            assertEquals("c", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(30, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("c");
+            assertEquals("c", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(30, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -383,20 +383,20 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(1, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(1, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(2, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(2, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("c");
-            assertEquals("c", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(-2, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("c");
+            assertEquals("c", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(-2, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -417,15 +417,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(10, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(10, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(2048, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(2048, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -447,15 +447,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(11, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(11, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(4096, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(4096, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -477,15 +477,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(0, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(0, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(2, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(2, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -507,15 +507,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(-1, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(-1, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(1, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(1, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -537,15 +537,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(11, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(11, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(11, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(11, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -567,10 +567,10 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(11, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(11, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -592,15 +592,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(10, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(10, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(10, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(10, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -622,15 +622,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(20, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(20, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(10, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(10, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -652,15 +652,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(10, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(10, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(5, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(5, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -682,15 +682,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(10, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(10, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(1, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(1, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -712,15 +712,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(10, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(10, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(18, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(18, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -746,15 +746,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(21, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(21, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(21, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(21, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -776,15 +776,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(-1, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(-1, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(21, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(21, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -806,15 +806,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(-151, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(-151, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(0, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(0, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -836,15 +836,15 @@ public class ParserTest extends TestCase {
             parser.parse();
             parser.run();
 
-            ReadVariableNode ReadVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(15, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
+            assertEquals("a", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(15, (int) DeclareVariableNode.getInteger());
 
-            ReadVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", ReadVariableNode.getName());
-            assertTrue(ReadVariableNode instanceof IntegerVariable);
-            assertEquals(0, (int) ReadVariableNode.getInteger());
+            DeclareVariableNode = parser.getGlobalVariable("b");
+            assertEquals("b", DeclareVariableNode.getName());
+            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            assertEquals(0, (int) DeclareVariableNode.getInteger());
 
         } catch (IOException e) {
             fail(e.getMessage());
