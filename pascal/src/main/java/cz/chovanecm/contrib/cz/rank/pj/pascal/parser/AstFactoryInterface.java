@@ -10,6 +10,7 @@ import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.DeclareVariableNode;
+import cz.chovanecm.pascal.truffle.nodes.variables.WriteVariableNode;
 
 import java.util.List;
 
@@ -37,13 +38,13 @@ public interface AstFactoryInterface {
 
     public StatementNode createGlobalAssignment(String variable, ExpressionNode expression);
 
-    public StatementNode createWhile(ExpressionNode expression, StatementNode statement);
+    public StatementNode createWhile(ExpressionNode condition, StatementNode loopBody);
 
     public StatementNode createIf(ExpressionNode expression, StatementNode statementTrue, StatementNode statementFalse);
 
-    public StatementNode createForDownTo(StatementNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
+    public StatementNode createForDownTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
 
-    public StatementNode createForTo(StatementNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
+    public StatementNode createForTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
 
     public ExpressionNode createConstant(Long integerValue);
 

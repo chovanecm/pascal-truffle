@@ -6,6 +6,7 @@ import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.DeclareVariableNode;
+import cz.chovanecm.pascal.truffle.nodes.variables.WriteVariableNode;
 import cz.rank.pj.pascal.*;
 import cz.rank.pj.pascal.lexan.LexicalAnalyzator;
 import cz.rank.pj.pascal.lexan.LexicalException;
@@ -413,9 +414,9 @@ public class Parser {
         StatementNode assignmentStatement = parseStatement();
 
         //TODO: Find a better way of checking it.
-        /*if (!(assignmentStatement instanceof Assignment)) {
+        if (!(assignmentStatement instanceof WriteVariableNode)) {
             throw new ParseException("Expected assignment statement!", lexan.getLineNumber());
-        }*/
+        }
 
         boolean downto = false;
 
@@ -445,10 +446,10 @@ public class Parser {
         logger.debug(currentToken);
 
         if (downto) {
-            return astFactory.createForDownTo(assignmentStatement, finalExpression, executeStatement);
+            return astFactory.createForDownTo((WriteVariableNode) assignmentStatement, finalExpression, executeStatement);
             //return new ForDownto((Assignment) assignmentStatement, finalExpression, executeStatement);
         } else {
-            return astFactory.createForTo(assignmentStatement, finalExpression, executeStatement);
+            return astFactory.createForTo((WriteVariableNode) assignmentStatement, finalExpression, executeStatement);
             //return new ForTo((Assignment) assignmentStatement, finalExpression, executeStatement);
         }
     }

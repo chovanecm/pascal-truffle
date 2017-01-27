@@ -2,6 +2,9 @@ package cz.chovanecm.pascal.truffle;
 
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
+import cz.chovanecm.pascal.truffle.nodes.controlflow.ForNode;
+import cz.chovanecm.pascal.truffle.nodes.controlflow.IfNode;
+import cz.chovanecm.pascal.truffle.nodes.controlflow.WhileNode;
 import cz.chovanecm.pascal.truffle.nodes.expression.*;
 import cz.chovanecm.pascal.truffle.nodes.logical.OrOperator;
 import cz.chovanecm.pascal.truffle.nodes.relational.*;
@@ -40,23 +43,23 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public StatementNode createWhile(ExpressionNode expression, StatementNode statement) {
-        return null;
+    public StatementNode createWhile(ExpressionNode condition, StatementNode loopBody) {
+        return new WhileNode(condition, loopBody);
     }
 
     @Override
     public StatementNode createIf(ExpressionNode expression, StatementNode statementTrue, StatementNode statementFalse) {
-        return null;
+        return new IfNode(expression, statementTrue, statementFalse);
     }
 
     @Override
-    public StatementNode createForDownTo(StatementNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) {
-        return null;
+    public StatementNode createForDownTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) {
+        return new ForNode(assignmentStatement, finalExpression, executeStatement, ForNode.ForDirection.DOWN);
     }
 
     @Override
-    public StatementNode createForTo(StatementNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) {
-        return null;
+    public StatementNode createForTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) {
+        return new ForNode(assignmentStatement, finalExpression, executeStatement, ForNode.ForDirection.UP);
     }
 
     @Override
