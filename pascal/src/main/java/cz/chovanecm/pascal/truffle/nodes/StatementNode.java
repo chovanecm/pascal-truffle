@@ -15,11 +15,8 @@
  */
 package cz.chovanecm.pascal.truffle.nodes;
 
-import com.oracle.truffle.api.dsl.NodeField;
-import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
-import cz.chovanecm.pascal.truffle.PascalContext;
 
 
 /**
@@ -31,4 +28,14 @@ public abstract class StatementNode extends Node {
 
     public abstract void execute(VirtualFrame frame);
 
+    /**
+     * Append a statement to an existing statement and return it.
+     * If possible, the node returns itself, otherwise a new copy is created and returned.
+     *
+     * @param statement
+     * @return
+     */
+    public StatementNode appendStatement(StatementNode statement) {
+        return new BlockNode(new StatementNode[]{this, statement});
+    }
 }

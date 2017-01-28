@@ -2,7 +2,7 @@ package cz.chovanecm.pascal.truffle;
 
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
-import cz.chovanecm.pascal.truffle.nodes.controlflow.ForNode;
+import cz.chovanecm.pascal.truffle.nodes.controlflow.ForNodeFactory;
 import cz.chovanecm.pascal.truffle.nodes.controlflow.IfNode;
 import cz.chovanecm.pascal.truffle.nodes.controlflow.WhileNode;
 import cz.chovanecm.pascal.truffle.nodes.expression.*;
@@ -16,6 +16,11 @@ import java.util.List;
  * Created by martin on 1/17/17.
  */
 public class TruffleAstFactory implements AstFactoryInterface {
+    private ForNodeFactory forNodeFactory;
+
+    public TruffleAstFactory() {
+        this.forNodeFactory = new ForNodeFactory(this);
+    }
 
     @Override
     public ProcedureNode createWriteLnProcedure() {
@@ -38,7 +43,7 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public StatementNode createGlobalAssignment(String variable, ExpressionNode expression) {
+    public WriteVariableNode createGlobalAssignment(String variable, ExpressionNode expression) {
         return WriteVariableNodeGen.create(expression, variable);
     }
 
@@ -54,12 +59,12 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public StatementNode createForDownTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) {
-        return new ForNode(assignmentStatement, finalExpression, executeStatement, ForNode.ForDirection.DOWN);
+        return forNodeFactory.generateForDownToNode(assignmentStatement, finalExpression, executeStatement);
     }
 
     @Override
     public StatementNode createForTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) {
-        return new ForNode(assignmentStatement, finalExpression, executeStatement, ForNode.ForDirection.UP);
+        return forNodeFactory.generateForToNode(assignmentStatement, finalExpression, executeStatement);
     }
 
     @Override
@@ -178,7 +183,27 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public ExpressionNode createReadVariable(String id) {
+    public ReadVariableNode createReadVariable(String id) {
         return ReadVariableNodeGen.create(id);
+    }
+
+    @Override
+    public StatementNode createIncrementVariable(ReadVariableNode variableNode) {
+        ExpressionNode newLoopVariableValue = createPlusOperator(
+                ReadVariableNodeGen.create(variableNode.getVariableName()),
+                ConstantNodeGen.create(1L)
+        );
+        WriteVariableNode writeBackNode = WriteVariableNodeGen.create(newLoopVariableValue, variableNode.getVariableName());
+        return writeBackNode;
+    }
+
+    @Override
+    public StatementNode createDecrementVariable(ReadVariableNode variableNode) {
+        ExpressionNode newLoopVariableValue = createMinusOperator(
+                ReadVariableNodeGen.create(variableNode.getVariableName()),
+                ConstantNodeGen.create(1L)
+        );
+        WriteVariableNode writeBackNode = WriteVariableNodeGen.create(newLoopVariableValue, variableNode.getVariableName());
+        return writeBackNode;
     }
 }

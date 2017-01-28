@@ -19,6 +19,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ import java.util.List;
  * @author martin
  */
 @NodeInfo(language = "Pascal")
-public class BlockNode extends StatementNode{
+public final class BlockNode extends StatementNode {
     @Children
     private final StatementNode [] statements;
 
@@ -46,5 +47,12 @@ public class BlockNode extends StatementNode{
         for (StatementNode statement : statements) {
             statement.execute(frame);
         }
+    }
+
+    @Override
+    public StatementNode appendStatement(StatementNode statement) {
+        StatementNode[] newStatements = Arrays.copyOf(statements, statements.length + 1);
+        newStatements[newStatements.length - 1] = statement;
+        return new BlockNode(newStatements);
     }
 }

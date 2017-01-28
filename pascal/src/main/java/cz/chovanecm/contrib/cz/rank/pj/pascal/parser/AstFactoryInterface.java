@@ -10,6 +10,7 @@ import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.DeclareVariableNode;
+import cz.chovanecm.pascal.truffle.nodes.variables.ReadVariableNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.WriteVariableNode;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface AstFactoryInterface {
 
     StatementNode createBlock(List<StatementNode> statements);
 
-    public StatementNode createGlobalAssignment(String variable, ExpressionNode expression);
+    public WriteVariableNode createGlobalAssignment(String variable, ExpressionNode expression);
 
     public StatementNode createWhile(ExpressionNode condition, StatementNode loopBody);
 
@@ -92,5 +93,15 @@ public interface AstFactoryInterface {
 
     public ExpressionNode createOrOperator(ExpressionNode left, ExpressionNode right);
 
-    ExpressionNode createReadVariable(String id);
+    /**
+     * Increment the variable by 1
+     *
+     * @param variableNode Variable to be incremented by 1
+     * @return Statement
+     */
+    StatementNode createIncrementVariable(ReadVariableNode variableNode);
+
+    ReadVariableNode createReadVariable(String id);
+
+    StatementNode createDecrementVariable(ReadVariableNode variableNode);
 }
