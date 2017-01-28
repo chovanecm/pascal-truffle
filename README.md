@@ -1,11 +1,11 @@
 # Pascal in Truffle
 
 ## Dependencies
-You need to install the modified Pascal Parser first to your Maven repository
+The project uses a modified Pascal Parser from Karel Rank  
+ Original URL: https://github.com/chovanecm/pascal-interpreter
 
-	git clone https://github.com/chovanecm/pascal-interpreter.git
-	cd pascal-interpreter
-	mvn install
+However the library has been bundled with this project, you don't
+need to install it separately anymore.
 
 ## Run
 Run mvn package in the pascal-truffle directory:
