@@ -29,8 +29,8 @@ public class OrOperatorTest {
     public void setUp() {
         statements = new ArrayList<>();
         astFactory = new TruffleAstFactory();
-        boolean leftExecuted = false;
-        boolean rightExecuted = false;
+        leftExecuted = false;
+        rightExecuted = false;
 
         statements.add(astFactory.createBooleanVariable("result"));
     }
