@@ -114,4 +114,11 @@ public class ForNodeTest {
         assertEquals("The control variable should be 10, because we started at -19 and went to -10.",
                 new Long(-10), trackControlVariableInLoop.getLongValue());
     }
+
+    @Test
+    public void testManyPassesLoopDirectionUp() {
+        TruffleRunner.runAndReturnFrame(generateCode(0, 1000000, ForNodeFactory.ForDirection.UP));
+        assertEquals("The control variable should be 10, because we started at -19 and went to -10.",
+                new Long(1000000), trackControlVariableInLoop.getLongValue());
+    }
 }

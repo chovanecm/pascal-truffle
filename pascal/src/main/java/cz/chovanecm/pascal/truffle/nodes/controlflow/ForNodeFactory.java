@@ -3,6 +3,7 @@ package cz.chovanecm.pascal.truffle.nodes.controlflow;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
+import cz.chovanecm.pascal.truffle.nodes.expression.EvaluateOnlyOnceNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.WriteVariableNode;
 
 /**
@@ -53,12 +54,12 @@ public class ForNodeFactory {
         if (direction == ForDirection.UP) {
             return astFactory.createLessEqualOperator(
                     astFactory.createReadVariable(assignment.getVariableName()),
-                    finalValue
+                    new EvaluateOnlyOnceNode(finalValue)
             );
         } else if (direction == ForDirection.DOWN) {
             return astFactory.createGreaterEqualOperator(
                     astFactory.createReadVariable(assignment.getVariableName()),
-                    finalValue
+                    new EvaluateOnlyOnceNode(finalValue)
             );
         } else {
             throw new RuntimeException("Unexpected loop direction " + direction.toString());
