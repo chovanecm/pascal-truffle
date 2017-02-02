@@ -158,7 +158,6 @@ public class Parser {
                             logger.debug(VariableNode);
 
                             if (!variables.containsKey(VariableNode.getName())) {
-                                //TODO: This should be treaded as declaration only
                                 variables.put(VariableNode.getName(), astFactory.createIntegerVariable(VariableNode.getName()));
                             } else {
                                 throw new ParseException("DeclareVariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
@@ -196,6 +195,24 @@ public class Parser {
 
                             if (!variables.containsKey(VariableNode.getName())) {
                                 variables.put(VariableNode.getName(), astFactory.createRealVariable(VariableNode.getName()));
+                            } else {
+                                throw new ParseException("DeclareVariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
+                            }
+                        }
+
+                        variableNames.clear();
+                        break;
+                    case BOOLEAN:
+
+                        logger.debug("BOOLEAN DeclareVariableNode");
+
+                        while (VariableNodesNamesIterator.hasNext()) {
+                            Token VariableNode = (Token) VariableNodesNamesIterator.next();
+
+                            logger.debug(VariableNode);
+
+                            if (!variables.containsKey(VariableNode.getName())) {
+                                variables.put(VariableNode.getName(), astFactory.createBooleanVariable(VariableNode.getName()));
                             } else {
                                 throw new ParseException("DeclareVariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }

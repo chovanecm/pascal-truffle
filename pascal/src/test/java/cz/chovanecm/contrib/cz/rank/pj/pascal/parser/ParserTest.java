@@ -1,22 +1,36 @@
 package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
+import com.oracle.truffle.api.nodes.NodeUtil;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
+import cz.chovanecm.pascal.truffle.nodes.ConstantNode;
+import cz.chovanecm.pascal.truffle.nodes.variables.*;
+import cz.rank.pj.pascal.NotEnoughtParametersException;
+import cz.rank.pj.pascal.UnknownProcedureNameException;
+import cz.rank.pj.pascal.lexan.LexicalException;
+import cz.rank.pj.pascal.parser.ParseException;
+import cz.rank.pj.pascal.parser.UnknownVariableNameException;
+import org.apache.log4j.PropertyConfigurator;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
 /**
  * User: karl Date: Jan 31, 2006 Time: 2:33:08 PM
  */
 
 // TODO Fix tests
-/*
-public class ParserTest extends TestCase {
+
+public class ParserTest {
 
     private Parser parser;
 
-    public ParserTest(String string) {
-        super(string);
-    }
 
     public static void main(String[] args) {
         PropertyConfigurator.configureAndWatch("log4j.properties");
-        junit.textui.TestRunner.run(ParserTest.class);
     }
 
     public void testProgram() {
@@ -29,19 +43,10 @@ public class ParserTest extends TestCase {
         }
     }
 
-    public void testWrongProgram() {
+    @Test(expected = ParseException.class)
+    public void testWrongProgram() throws Exception {
         parser = new Parser(new StringReader("\nprogram ; begin end."));
-
-        try {
-            parser.parse();
-
-            fail("Bad parse of program!");
-        } catch (IOException | LexicalException e) {
-            fail(e.getMessage());
-        } catch (ParseException ignored) {
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        parser.parse();
     }
 
     public void testVar() {
@@ -60,102 +65,60 @@ public class ParserTest extends TestCase {
         }
     }
 
-    public void testVarMissingId() {
+    @Test(expected = ParseException.class)
+    public void testVarMissingId() throws Exception {
         parser = new Parser(new StringReader("var a, : integer; begin end."));
-
-        try {
-            parser.parse();
-            fail("Should not be parsed!");
-        } catch (IOException e) {
-            fail(e.getMessage());
-        } catch (ParseException e) {
-        } catch (LexicalException e) {
-            fail(e.getMessage());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        parser.parse();
     }
 
-    public void testVarDoubleColon() {
+    @Test(expected = ParseException.class)
+    public void testVarDoubleColon() throws Exception {
         parser = new Parser(new StringReader("var a, b:: integer;  begin end."));
-
-        try {
-            parser.parse();
-            fail("Should not be parsed!");
-        } catch (IOException e) {
-            fail(e.getMessage());
-        } catch (ParseException e) {
-        } catch (LexicalException e) {
-            fail(e.getMessage());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        parser.parse();
     }
 
-    public void testVarDoubleComma() {
+    @Test(expected = ParseException.class)
+    public void testVarDoubleComma() throws ParseException, UnknownVariableNameException, UnknownProcedureNameException, NotEnoughtParametersException, LexicalException, IOException {
         parser = new Parser(new StringReader("var a,, b: integer;  begin end."));
-
-        try {
-            parser.parse();
-            fail("Should not be parsed!");
-        } catch (IOException e) {
-            fail(e.getMessage());
-        } catch (ParseException e) {
-        } catch (LexicalException e) {
-            fail(e.getMessage());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        parser.parse();
     }
 
-    public void testVarDoubleId() {
+    @Test(expected = ParseException.class)
+    public void testVarDoubleId() throws Exception {
         parser = new Parser(new StringReader("var a b, : integer;  begin end."));
-
-        try {
-            parser.parse();
-            fail("Should not be parsed!");
-        } catch (IOException e) {
-            fail(e.getMessage());
-        } catch (ParseException e) {
-        } catch (LexicalException e) {
-            fail(e.getMessage());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        parser.parse();
     }
 
-    public void testVarMissingSemicolon() {
+    @Test(expected = ParseException.class)
+    public void testVarMissingSemicolon() throws Exception {
         parser = new Parser(new StringReader("var a , b : integer begin end."));
-
-        try {
-            parser.parse();
-            fail("Should not be parsed!");
-        } catch (IOException e) {
-            fail(e.getMessage());
-        } catch (ParseException e) {
-        } catch (LexicalException e) {
-            fail(e.getMessage());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        parser.parse();
     }
 
+    @Test
     public void testVars() {
-        parser = new Parser(new StringReader("var a  : integer; \n b : string; \nvar c : real; \nbegin end."));
+        parser = new Parser(
+                new StringReader("var a  : integer; \n b : string; \nvar c : real;\n var d: Boolean; \nbegin end."));
 
         try {
             parser.parse();
-            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", DeclareVariableNode.getName());
-            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            DeclareVariableNode node = parser.getGlobalVariable("a");
+            assertEquals("a", node.getName());
+            assertTrue(node instanceof DeclareLongVariable);
 
-            DeclareVariableNode = parser.getGlobalVariable("b");
-            assertEquals("b", DeclareVariableNode.getName());
-            assertTrue(DeclareVariableNode instanceof StringVariable);
+            node = parser.getGlobalVariable("b");
+            assertEquals("b", node.getName());
+            assertTrue(node instanceof DeclareStringVariable);
 
-            DeclareVariableNode = parser.getGlobalVariable("c");
-            assertEquals("c", DeclareVariableNode.getName());
-            assertTrue(DeclareVariableNode instanceof RealVariable);
+            node = parser.getGlobalVariable("c");
+            assertEquals("c", node.getName());
+            assertTrue(node instanceof DeclareRealVariable);
+
+            node = parser.getGlobalVariable("d");
+            assertEquals("d", node.getName());
+            assertTrue(node instanceof DeclareBooleanVariable);
+
+
         } catch (IOException e) {
             fail(e.getMessage());
         } catch (ParseException e) {
@@ -168,18 +131,27 @@ public class ParserTest extends TestCase {
         }
     }
 
+    private void helperTestConstantAssignment(WriteVariableNode assignment, Object value) {
+        List<ConstantNode> children = NodeUtil.findAllNodeInstances(assignment, ConstantNode.class);
+        assertEquals(1, children.size());
+        ConstantNode node = children.get(0);
+        assertEquals(value, node.getValue());
+    }
+
+    @Test
     public void testAsssigment() {
         parser = new Parser(new StringReader("var a  : integer;\nbegin a:=3; a:=1; \nend."));
 
         try {
             parser.parse();
-            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", DeclareVariableNode.getName());
-            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            List<WriteVariableNode> assignments =
+                    NodeUtil.findAllNodeInstances(parser.getEntryPoint(), WriteVariableNode.class);
+            assertEquals(2, assignments.size());
+            assertEquals("a", assignments.get(0).getVariableName());
+            assertEquals("a", assignments.get(1).getVariableName());
+            helperTestConstantAssignment(assignments.get(0), 3L);
+            helperTestConstantAssignment(assignments.get(1), 1L);
 
-            parser.run();
-
-            assertEquals(1, (int) DeclareVariableNode.getInteger());
         } catch (IOException e) {
             fail(e.getMessage());
         } catch (ParseException e) {
@@ -197,13 +169,13 @@ public class ParserTest extends TestCase {
 
         try {
             parser.parse();
-            DeclareVariableNode DeclareVariableNode = parser.getGlobalVariable("a");
-            assertEquals("a", DeclareVariableNode.getName());
-            assertTrue(DeclareVariableNode instanceof IntegerVariable);
+            DeclareVariableNode declare = parser.getGlobalVariable("a");
+            assertEquals("a", declare.getName());
+            assertTrue(declare instanceof DeclareLongVariable);
+            List<BlockNode> blockNodes = NodeUtil.findAllNodeInstances(parser.getEntryPoint(), BlockNode.class);
+            assertEquals(2, blockNodes.size());
 
-            parser.run();
 
-            assertEquals(1, (int) DeclareVariableNode.getInteger());
         } catch (IOException e) {
             fail(e.getMessage());
         } catch (ParseException e) {
@@ -215,7 +187,7 @@ public class ParserTest extends TestCase {
             fail(e.getMessage());
         }
     }
-
+/*
     public void testParenties() {
         parser = new Parser(new StringReader("var a  : integer;\nbegin a:=(1); \na :=(a); \nend."));
 
@@ -858,5 +830,5 @@ public class ParserTest extends TestCase {
             fail(e.getMessage());
         }
     }
+    */
 }
-*/

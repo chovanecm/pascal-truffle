@@ -194,6 +194,7 @@ public class LexicalAnalyzator {
         keywords.put("begin", TokenType.BEGIN);
         keywords.put("end", TokenType.END);
         keywords.put("integer", TokenType.INTEGER);
+        keywords.put("boolean", TokenType.BOOLEAN);
         keywords.put("string", TokenType.STRING);
         keywords.put("real", TokenType.REAL);
         keywords.put("and", TokenType.AND);
