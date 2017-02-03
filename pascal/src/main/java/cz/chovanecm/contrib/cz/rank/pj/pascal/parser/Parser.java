@@ -104,6 +104,7 @@ public class Parser {
         }
     }
 
+
     public DeclareVariableNode getGlobalVariable(String name) {
         return globalVariables.get(name);
     }
@@ -153,14 +154,14 @@ public class Parser {
                         logger.debug("INTEGER Variable");
 
                         while (VariableNodesNamesIterator.hasNext()) {
-                            Token VariableNode = (Token) VariableNodesNamesIterator.next();
+                            Token variableToken = (Token) VariableNodesNamesIterator.next();
 
-                            logger.debug(VariableNode);
+                            logger.debug(variableToken);
 
-                            if (!variables.containsKey(VariableNode.getName())) {
-                                variables.put(VariableNode.getName(), astFactory.createIntegerVariable(VariableNode.getName()));
+                            if (!variables.containsKey(variableToken.getName())) {
+                                variables.put(variableToken.getName(), astFactory.createIntegerVariable(variableToken.getName()));
                             } else {
-                                throw new ParseException("DeclareVariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
+                                throw new ParseException("DeclareVariableNode '" + variableToken.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
                         }
 
@@ -171,14 +172,14 @@ public class Parser {
                         logger.debug("STRING DeclareVariableNode");
 
                         while (VariableNodesNamesIterator.hasNext()) {
-                            Token VariableNode = (Token) VariableNodesNamesIterator.next();
+                            Token variableToken = (Token) VariableNodesNamesIterator.next();
 
-                            logger.debug(VariableNode);
+                            logger.debug(variableToken);
 
-                            if (!variables.containsKey(VariableNode.getName())) {
-                                variables.put(VariableNode.getName(), astFactory.createStringVariable(VariableNode.getName()));
+                            if (!variables.containsKey(variableToken.getName())) {
+                                variables.put(variableToken.getName(), astFactory.createStringVariable(variableToken.getName()));
                             } else {
-                                throw new ParseException("DeclareVariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
+                                throw new ParseException("DeclareVariableNode '" + variableToken.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
                         }
 
@@ -189,14 +190,14 @@ public class Parser {
                         logger.debug("REAL DeclareVariableNode");
 
                         while (VariableNodesNamesIterator.hasNext()) {
-                            Token VariableNode = (Token) VariableNodesNamesIterator.next();
+                            Token variableToken = (Token) VariableNodesNamesIterator.next();
 
-                            logger.debug(VariableNode);
+                            logger.debug(variableToken);
 
-                            if (!variables.containsKey(VariableNode.getName())) {
-                                variables.put(VariableNode.getName(), astFactory.createRealVariable(VariableNode.getName()));
+                            if (!variables.containsKey(variableToken.getName())) {
+                                variables.put(variableToken.getName(), astFactory.createRealVariable(variableToken.getName()));
                             } else {
-                                throw new ParseException("DeclareVariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
+                                throw new ParseException("DeclareVariableNode '" + variableToken.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
                         }
 
@@ -207,19 +208,49 @@ public class Parser {
                         logger.debug("BOOLEAN DeclareVariableNode");
 
                         while (VariableNodesNamesIterator.hasNext()) {
-                            Token VariableNode = (Token) VariableNodesNamesIterator.next();
+                            Token variableToken = (Token) VariableNodesNamesIterator.next();
 
-                            logger.debug(VariableNode);
+                            logger.debug(variableToken);
 
-                            if (!variables.containsKey(VariableNode.getName())) {
-                                variables.put(VariableNode.getName(), astFactory.createBooleanVariable(VariableNode.getName()));
+                            if (!variables.containsKey(variableToken.getName())) {
+                                variables.put(variableToken.getName(), astFactory.createBooleanVariable(variableToken.getName()));
                             } else {
-                                throw new ParseException("DeclareVariableNode '" + VariableNode.getName() + "'is defined 2times!", lexan.getLineNumber());
+                                throw new ParseException("DeclareVariableNode '" + variableToken.getName() + "'is defined 2times!", lexan.getLineNumber());
                             }
                         }
 
                         variableNames.clear();
                         break;
+
+                    case ARRAY:
+                        logger.debug("ARRAY DeclareVariableNode");
+                        String arrayName = null;
+                        while (VariableNodesNamesIterator.hasNext()) {
+                            Token variableToken = (Token) VariableNodesNamesIterator.next();
+
+                            logger.debug(variableToken);
+
+                            if (!variables.containsKey(variableToken.getName())) {
+                                arrayName = variableToken.getName();
+                            } else {
+                                throw new ParseException("DeclareVariableNode '" + variableToken.getName() + "'is defined 2times!", lexan.getLineNumber());
+                            }
+                        }
+                        variableNames.clear();
+                        expectToken(TokenType.LBRACKET);
+                        expectToken(TokenType.VAL_INTEGER);
+                        int lowerRange = currentToken.getIntegerValue();
+                        expectToken(TokenType.DOTDOT);
+                        expectToken(TokenType.VAL_INTEGER);
+                        int upperRange = currentToken.getIntegerValue();
+                        expectToken(TokenType.RBRACKET);
+                        expectToken(TokenType.OF);
+                        // TODO: Read type;
+                        // TODO: Declare array
+                        readToken();
+                        variableNames.clear();
+                        break;
+
                     default:
                         throw new ParseException("type expected", lexan.getLineNumber());
                 }
@@ -761,6 +792,13 @@ public class Parser {
             return currentToken;
         } else {
             return currentToken = lexan.getNextToken();
+        }
+    }
+
+    private void expectToken(TokenType type) throws ParseException, IOException, LexicalException {
+        TokenType gotType = readToken().getType();
+        if (gotType != type) {
+            throw new ParseException("Token " + type.toString() + " expected, got " + gotType.toString() + " instead!", lexan.getLineNumber());
         }
     }
 

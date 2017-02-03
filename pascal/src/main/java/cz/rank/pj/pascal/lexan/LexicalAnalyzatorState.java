@@ -58,5 +58,5 @@ enum LexicalAnalyzatorState {
     NOT,
     EOF,
     ERROR,
-    DOT
+    REAL_OR_RANGE, DOT
 }

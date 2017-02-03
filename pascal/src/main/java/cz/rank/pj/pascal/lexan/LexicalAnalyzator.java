@@ -202,6 +202,8 @@ public class LexicalAnalyzator {
         keywords.put("not", TokenType.NOT);
         keywords.put("true", TokenType.VAL_BOOLEAN);
         keywords.put("false", TokenType.VAL_BOOLEAN);
+        keywords.put("array", TokenType.ARRAY);
+        keywords.put("of", TokenType.OF);
 
         logger.debug(keywords);
     }
@@ -383,12 +385,38 @@ public class LexicalAnalyzator {
                         tokenBuffer.write(character);
                         break;
                     }
+                    if (isDotChar(character)) {
+                        currentTokenType = TokenType.DOTDOT;
+                        state = LexicalAnalyzatorState.FINISH;
+                        break;
+                    }
 
                     state = LexicalAnalyzatorState.FINISH;
                     reader.reset();
 
                     break;
                 }
+                case REAL_OR_RANGE:
+                    if (isDotChar(character)) {
+                        int nextChar = reader.read();
+                        if (isDotChar(nextChar)) { // two dots in a row ..
+                            currentTokenType = TokenType.VAL_INTEGER;
+                            reader.reset();
+                        } else if (isNumberChar(nextChar)) { //double
+                            currentTokenType = TokenType.VAL_DOUBLE;
+                            state = LexicalAnalyzatorState.REAL;
+                            tokenBuffer.write(character);
+                            tokenBuffer.write(nextChar);
+                            //reader.reset();
+                            break;
+                        }
+                        state = LexicalAnalyzatorState.FINISH;
+                        continue;
+                    } else {
+                        state = LexicalAnalyzatorState.ERROR;
+                    }
+                    // continue while
+                    continue;
                 case INTEGER: {
                     if (isNumberChar(character)) {
                         tokenBuffer.write(character);
@@ -396,10 +424,10 @@ public class LexicalAnalyzator {
                     }
 
                     if (isDotChar(character)) {
-                        state = LexicalAnalyzatorState.REAL;
-                        currentTokenType = TokenType.VAL_DOUBLE;
-
-                        tokenBuffer.write(character);
+                        state = LexicalAnalyzatorState.REAL_OR_RANGE;
+                        //currentTokenType = TokenType.VAL_DOUBLE;
+                        reader.reset();
+                        //tokenBuffer.write(character);
                         break;
                     }
 

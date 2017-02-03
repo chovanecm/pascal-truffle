@@ -82,5 +82,5 @@ public enum TokenType {
     VAL_DOUBLE,
     VAL_BOOLEAN,
     EOF,
-    BOOLEAN, DOT
+    BOOLEAN, DOT, DOTDOT, OF
 }

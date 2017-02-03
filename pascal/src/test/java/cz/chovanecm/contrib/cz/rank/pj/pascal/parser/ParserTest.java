@@ -187,6 +187,14 @@ public class ParserTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void testArray() throws ParseException, UnknownProcedureNameException,
+            IOException, LexicalException,
+            UnknownVariableNameException, NotEnoughtParametersException {
+        parser = new Parser(new StringReader("var a  : array [1..10] of integer;\nbegin\n a[1]:=1;\n a[3]:=42;  \nend."));
+        parser.parse();
+    }
 /*
     public void testParenties() {
         parser = new Parser(new StringReader("var a  : integer;\nbegin a:=(1); \na :=(a); \nend."));

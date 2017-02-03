@@ -1,16 +1,15 @@
 package cz.chovanecm.contrib.cz.rank.pj.pascal.lexan;
 
-import junit.framework.TestCase;
 import cz.rank.pj.pascal.Token;
 import cz.rank.pj.pascal.TokenType;
 import cz.rank.pj.pascal.lexan.LexicalAnalyzator;
 import cz.rank.pj.pascal.lexan.LexicalException;
-
-import java.io.StringReader;
-import java.io.IOException;
-import java.io.BufferedReader;
-
+import junit.framework.TestCase;
 import org.apache.log4j.PropertyConfigurator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * User: karl
@@ -19,10 +18,19 @@ import org.apache.log4j.PropertyConfigurator;
  */
 
 public class LexicalAnalyzatorTest extends TestCase {
+	static {
+		PropertyConfigurator.configureAndWatch("log4j.properties");
+	}
+
 	private LexicalAnalyzator lexicalAnalyzator;
 
 	public LexicalAnalyzatorTest(String string) {
 		super(string);
+	}
+
+	public static void main(String[] args) {
+		PropertyConfigurator.configureAndWatch("log4j.properties");
+		junit.textui.TestRunner.run(LexicalAnalyzatorTest.class);
 	}
 
 	protected void setUp() throws Exception {
@@ -221,6 +229,57 @@ public class LexicalAnalyzatorTest extends TestCase {
 		}
 	}
 
+	public void testNumbers() {
+		try {
+			lexicalAnalyzator.setReader(new BufferedReader(new StringReader("1 100 0.15 10")));
+
+			Token token = lexicalAnalyzator.getNextToken();
+			assertEquals(TokenType.VAL_INTEGER, token.getType());
+			assertEquals(new Integer(1), token.getIntegerValue());
+
+			token = lexicalAnalyzator.getNextToken();
+			assertEquals(TokenType.VAL_INTEGER, token.getType());
+			assertEquals(new Integer(100), token.getIntegerValue());
+
+			token = lexicalAnalyzator.getNextToken();
+			assertEquals(TokenType.VAL_DOUBLE, token.getType());
+			assertEquals(new Double(0.15), token.getDoubleValue());
+
+			token = lexicalAnalyzator.getNextToken();
+			assertEquals(TokenType.VAL_INTEGER, token.getType());
+			assertEquals(new Integer(10), token.getIntegerValue());
+
+
+		} catch (IOException e) {
+			fail(e.getMessage());
+		} catch (LexicalException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	public void testRange() {
+		try {
+			lexicalAnalyzator.setReader(new BufferedReader(new StringReader("1..20")));
+
+			Token token = lexicalAnalyzator.getNextToken();
+			assertEquals(TokenType.VAL_INTEGER, token.getType());
+			assertEquals(new Integer(1), token.getIntegerValue());
+
+			token = lexicalAnalyzator.getNextToken();
+			assertEquals(TokenType.DOTDOT, token.getType());
+
+			token = lexicalAnalyzator.getNextToken();
+			assertEquals(TokenType.VAL_INTEGER, token.getType());
+			assertEquals(new Integer(20), token.getIntegerValue());
+
+
+		} catch (IOException e) {
+			fail(e.getMessage());
+		} catch (LexicalException e) {
+			fail(e.getMessage());
+		}
+	}
+
 	public void testString() {
 		try {
 			lexicalAnalyzator.setReader(new BufferedReader(new StringReader("\"test\"\"\"\"\"\"test\"")));
@@ -283,14 +342,5 @@ public class LexicalAnalyzatorTest extends TestCase {
 		} catch (LexicalException e) {
 			fail(e.getMessage());
 		}
-	}
-
-	public static void main(String[] args) {
-		PropertyConfigurator.configureAndWatch("log4j.properties");
-		junit.textui.TestRunner.run(LexicalAnalyzatorTest.class);
-	}
-
-	static {
-		PropertyConfigurator.configureAndWatch("log4j.properties");
 	}
 }
