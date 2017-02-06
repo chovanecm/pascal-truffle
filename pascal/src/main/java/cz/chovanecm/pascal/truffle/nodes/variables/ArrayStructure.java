@@ -25,6 +25,14 @@ public class ArrayStructure {
         }
     }
 
+    public int getLowerBound() {
+        return lowerBound;
+    }
+
+    public int getUpperBound() {
+        return upperBound;
+    }
+
     public void write(int index, Object value) {
         ((Object[]) (this.array))[index + lowerBound] = value;
     }
