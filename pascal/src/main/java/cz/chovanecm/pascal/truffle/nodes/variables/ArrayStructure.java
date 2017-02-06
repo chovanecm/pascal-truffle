@@ -33,12 +33,25 @@ public class ArrayStructure {
         return upperBound;
     }
 
-    public void write(int index, Object value) {
-        ((Object[]) (this.array))[index + lowerBound] = value;
+    public void writeLong(int index, long value) {
+        ((long[]) (this.array))[index - lowerBound] = value;
     }
 
+    public void writeString(int index, String value) {
+        ((String[]) (this.array))[index - lowerBound] = value;
+    }
+
+    public void writeDouble(int index, double value) {
+        ((double[]) (this.array))[index - lowerBound] = value;
+    }
+
+    public void writeBoolean(int index, boolean value) {
+        ((boolean[]) (this.array))[index - lowerBound] = value;
+    }
+
+
     public Object read(int index) {
-        return ((Object[]) (this.array))[index + lowerBound];
+        return ((Object[]) (this.array))[index - lowerBound];
     }
 
     public Object getArray() {

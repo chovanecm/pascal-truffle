@@ -220,9 +220,24 @@ public class ParserTest {
                 "a[1]:=1;\n" +
                 "a[3]:=42;\n"
                 + " \nend."));
-        parser = new Parser(new StringReader("var a  : array [1..10] of integer;\nbegin\n\nend."));
         parser.parse();
-        fail("Should test whether an assignment node is present.");
+        List<WriteArrayVariableNode> assignments =
+                NodeUtil.findAllNodeInstances(parser.getEntryPoint(), WriteArrayVariableNode.class);
+        assertEquals(2, assignments.size());
+
+        assertEquals("a", assignments.get(0).getVariableName());
+        assertEquals("a", assignments.get(1).getVariableName());
+        WriteArrayVariableNode assignment = assignments.get(0);
+        List<ConstantNode> constants = NodeUtil.findAllNodeInstances(assignment, ConstantNode.class);
+        assertEquals(new Long(1), constants.get(0).getValue());
+        assertEquals(new Long(1), constants.get(1).getValue());
+
+        assignment = assignments.get(1);
+        constants = NodeUtil.findAllNodeInstances(assignment, ConstantNode.class);
+        //NodeUtil.printTree(System.err, assignment);
+        assertEquals(new Long(42), constants.get(0).getValue());
+        assertEquals(new Long(3), constants.get(1).getValue());
+
     }
 
     @Test
@@ -232,7 +247,6 @@ public class ParserTest {
                 "a[1]:=1;\n" +
                 "b:=a[1];\n"
                 + " \nend."));
-        parser = new Parser(new StringReader("var a  : array [1..10] of integer;\nbegin\n\nend."));
         parser.parse();
         fail("Should test whether a read node is present.");
     }

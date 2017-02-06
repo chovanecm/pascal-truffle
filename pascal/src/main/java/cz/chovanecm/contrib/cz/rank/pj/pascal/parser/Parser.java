@@ -404,6 +404,8 @@ public class Parser {
                 switch (readToken().getType()) {
                     case ASSIGNMENT:
                         return parseAssignment(checkAndReturnVariableNode(name).getName());
+                    case LBRACKET:
+                        return parseArrayAssignment(checkAndReturnVariableNode(name).getName());
                     // procedure
                     case LPAREN:
                         ProcedureNode procedure = checkAndReturnProcedureNode(name, parseProcedureNodeParameters());
@@ -442,6 +444,7 @@ public class Parser {
                 throw new ParseException("Unexpected token '" + currentToken + "'", lexan.getLineNumber());
         }
     }
+
 
     private StatementNode parseWhile() throws IOException, ParseException, LexicalException, NotEnoughtParametersException,
             UnknownVariableNameException, UnknownProcedureNameException {
@@ -771,6 +774,14 @@ public class Parser {
 		}
          */
         return st;
+    }
+
+    private StatementNode parseArrayAssignment(String variableName) throws UnknownVariableNameException, ParseException, LexicalException, IOException {
+        ExpressionNode index = parseExpression();
+        expectToken(TokenType.RBRACKET);
+        expectToken(TokenType.ASSIGNMENT);
+        ExpressionNode value = parseExpression();
+        return astFactory.createWriteArrayAssignment(variableName, index, value);
     }
 
     public StatementNode parse() throws ParseException, IOException, LexicalException, UnknownVariableNameException, UnknownProcedureNameException, NotEnoughtParametersException {

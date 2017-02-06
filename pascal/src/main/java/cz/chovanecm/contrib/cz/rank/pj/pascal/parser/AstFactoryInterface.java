@@ -106,4 +106,6 @@ public interface AstFactoryInterface {
     StatementNode createDecrementVariable(ReadVariableNode variableNode);
 
     DeclareVariableNode createDeclareSimpleArray(String id, int lowerBound, int upperBound, Class<?> type);
+
+    StatementNode createWriteArrayAssignment(String arrayName, ExpressionNode writePosition, ExpressionNode value);
 }
