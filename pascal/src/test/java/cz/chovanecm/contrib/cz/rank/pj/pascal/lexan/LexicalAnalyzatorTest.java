@@ -163,7 +163,7 @@ public class LexicalAnalyzatorTest extends TestCase {
 		}
 	}
 
-	public void testAssigment() {
+	public void testAssignment() {
 		try {
 			lexicalAnalyzator.setReader(new BufferedReader(new StringReader("a := 1;")));
 
@@ -186,7 +186,7 @@ public class LexicalAnalyzatorTest extends TestCase {
 		}
 	}
 
-    public void testArrayAssigment() {
+    public void testArrayAssignment() {
         try {
             lexicalAnalyzator.setReader(new BufferedReader(new StringReader("a[10] := 1;")));
 
