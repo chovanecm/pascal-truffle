@@ -42,6 +42,7 @@ public class Parser {
     private StatementNode entryPoint;
     private boolean tokenPushed;
     private AstFactoryInterface astFactory = new TruffleAstFactory();
+
     public Parser(Reader reader) {
         this.lexan = new LexicalAnalyzator(reader);
 
@@ -243,25 +244,35 @@ public class Parser {
                         // NOTE: In fact, this must be not necessarily a range
                         // it can be for example Boolean, but for simplicity,
                         // we consider only 1-D arrays indexed by integers
-                        int lowerRange = currentToken.getIntegerValue();
+                        int lowerBound = currentToken.getIntegerValue();
                         expectToken(TokenType.DOTDOT);
                         expectToken(TokenType.VAL_INTEGER);
-                        int upperRange = currentToken.getIntegerValue();
+                        int upperBound = currentToken.getIntegerValue();
 
 
                         expectToken(TokenType.RBRACKET);
                         expectToken(TokenType.OF);
-                        // TODO: Read type;
-                        // TODO: Declare array
                         readToken();
                         switch (currentToken.getType()) {
                             case INTEGER:
+                                variables.put(arrayName, astFactory.createDeclareSimpleArray(
+                                        arrayName, lowerBound, upperBound, long.class
+                                ));
                                 break;
                             case REAL:
+                                variables.put(arrayName, astFactory.createDeclareSimpleArray(
+                                        arrayName, lowerBound, upperBound, double.class
+                                ));
                                 break;
                             case BOOLEAN:
+                                variables.put(arrayName, astFactory.createDeclareSimpleArray(
+                                        arrayName, lowerBound, upperBound, boolean.class
+                                ));
                                 break;
                             case STRING:
+                                variables.put(arrayName, astFactory.createDeclareSimpleArray(
+                                        arrayName, lowerBound, upperBound, String.class
+                                ));
                                 break;
                             default:
                                 throw new ParseException("Only integer, real, boolean and string arrays are supported.", lexan.getLineNumber());
@@ -343,7 +354,7 @@ public class Parser {
 
             logger.debug(currentToken);
             /*
-			if (st == null) {
+            if (st == null) {
 				throw new ParseException("Unexpected token '" + currentToken + "'");
 			}
              */

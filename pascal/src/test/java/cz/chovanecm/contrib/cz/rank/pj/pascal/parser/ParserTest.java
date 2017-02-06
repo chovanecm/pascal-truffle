@@ -194,7 +194,14 @@ public class ParserTest {
             UnknownVariableNameException, NotEnoughtParametersException {
         parser = new Parser(new StringReader("var a  : array [1..10] of integer;\nbegin\n\nend."));
         parser.parse();
-        fail("Should test that it was really declared.");
+        List<DeclareArrayVariable> arrays = NodeUtil.findAllNodeInstances(parser.getEntryPoint(),
+                DeclareArrayVariable.class);
+        assertEquals(1, arrays.size());
+        DeclareArrayVariable array = arrays.get(0);
+        assertEquals("a", array.getName());
+        assertEquals(1, array.getLowerBound());
+        assertEquals(10, array.getUpperBound());
+        assertEquals(long.class, array.getClazz());
     }
 
     @Test(expected = ParseException.class)
@@ -203,7 +210,7 @@ public class ParserTest {
             UnknownVariableNameException, NotEnoughtParametersException {
         parser = new Parser(new StringReader("var a  : array [1..10] of array;\nbegin\n\nend."));
         parser.parse();
-        fail("Should fail on array of array.");
+        fail("Should throw an exception when declaring array of array");
     }
 
     @Test

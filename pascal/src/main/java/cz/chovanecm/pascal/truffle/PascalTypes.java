@@ -6,8 +6,8 @@ import com.oracle.truffle.api.dsl.internal.DSLOptions;
 /**
  * Created by martin on 1/18/17.
  */
-//Not sure what is this actually good for
-@TypeSystem({long.class, String.class, double.class, boolean.class, long[].class, String[].class, double[].class, boolean[].class})
+//TODO: String[].class seem not to be supported
+@TypeSystem({long.class, String.class, double.class, boolean.class, long[].class, double[].class, boolean[].class})
 @DSLOptions
 public class PascalTypes {
 
