@@ -529,7 +529,7 @@ public class LexicalAnalyzator {
                 case COLON: {
                     if (isEqualChar(character)) {
                         state = LexicalAnalyzatorState.FINISH;
-                        currentTokenType = TokenType.ASSIGMENT;
+                        currentTokenType = TokenType.ASSIGNMENT;
 
                         continue;
                     }

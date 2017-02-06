@@ -67,7 +67,7 @@ public enum TokenType {
     DIV,
     REAL_DIV,
     MOD,
-    ASSIGMENT,
+    ASSIGNMENT,
     PROGRAM,
     PROCEDURE,
     FUNCTION,

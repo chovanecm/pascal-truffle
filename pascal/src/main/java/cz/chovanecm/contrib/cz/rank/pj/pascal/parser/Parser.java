@@ -402,8 +402,8 @@ public class Parser {
                 String name = currentToken.getName();
 
                 switch (readToken().getType()) {
-                    case ASSIGMENT:
-                        return parseAssigment(checkAndReturnVariableNode(name).getName());
+                    case ASSIGNMENT:
+                        return parseAssignment(checkAndReturnVariableNode(name).getName());
                     // procedure
                     case LPAREN:
                         ProcedureNode procedure = checkAndReturnProcedureNode(name, parseProcedureNodeParameters());
@@ -761,10 +761,10 @@ public class Parser {
         return ex;
     }
 
-    private StatementNode parseAssigment(String variable) throws IOException, LexicalException, ParseException, UnknownVariableNameException {
+    private StatementNode parseAssignment(String variable) throws IOException, LexicalException, ParseException, UnknownVariableNameException {
         StatementNode st = astFactory.createGlobalAssignment(variable, parseExpression()); //new Assignment(DeclareVariableNode, parseExpression());
 
-        logger.debug("parseAssigment token:" + currentToken);
+        logger.debug("parseAssignment token:" + currentToken);
         /*
 		if (!readToken().isSemicolon()) {
 			throw new ParseException("Expected ';'", lexan.getLineNumber());

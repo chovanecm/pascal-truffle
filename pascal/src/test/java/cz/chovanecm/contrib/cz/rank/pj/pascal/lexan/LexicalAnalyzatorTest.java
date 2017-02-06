@@ -173,7 +173,7 @@ public class LexicalAnalyzatorTest extends TestCase {
 			assertEquals("a", token.getName());
 
 			token = lexicalAnalyzator.getNextToken();
-			assertEquals(TokenType.ASSIGMENT, token.getType());
+			assertEquals(TokenType.ASSIGNMENT, token.getType());
 
 			token = lexicalAnalyzator.getNextToken();
 			assertEquals(TokenType.VAL_INTEGER, token.getType());
@@ -185,6 +185,40 @@ public class LexicalAnalyzatorTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+
+    public void testArrayAssigment() {
+        try {
+            lexicalAnalyzator.setReader(new BufferedReader(new StringReader("a[10] := 1;")));
+
+            Token token = lexicalAnalyzator.getNextToken();
+
+            assertEquals(TokenType.ID, token.getType());
+            assertEquals("a", token.getName());
+
+            token = lexicalAnalyzator.getNextToken();
+            assertEquals(TokenType.LBRACKET, token.getType());
+
+            token = lexicalAnalyzator.getNextToken();
+            assertEquals(TokenType.VAL_INTEGER, token.getType());
+            assertEquals(new Integer(10), token.getIntegerValue());
+
+            token = lexicalAnalyzator.getNextToken();
+            assertEquals(TokenType.RBRACKET, token.getType());
+
+            token = lexicalAnalyzator.getNextToken();
+			assertEquals(TokenType.ASSIGNMENT, token.getType());
+
+
+            token = lexicalAnalyzator.getNextToken();
+            assertEquals(TokenType.VAL_INTEGER, token.getType());
+            assertEquals(1, (int) token.getIntegerValue());
+
+        } catch (IOException e) {
+            fail(e.getMessage());
+        } catch (LexicalException e) {
+            fail(e.getMessage());
+        }
+    }
 
 	public void testBrackets() {
 		try {
