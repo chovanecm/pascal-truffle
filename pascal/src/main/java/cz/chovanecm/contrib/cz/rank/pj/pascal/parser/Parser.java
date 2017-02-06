@@ -239,15 +239,33 @@ public class Parser {
                         variableNames.clear();
                         expectToken(TokenType.LBRACKET);
                         expectToken(TokenType.VAL_INTEGER);
+
+                        // NOTE: In fact, this must be not necessarily a range
+                        // it can be for example Boolean, but for simplicity,
+                        // we consider only 1-D arrays indexed by integers
                         int lowerRange = currentToken.getIntegerValue();
                         expectToken(TokenType.DOTDOT);
                         expectToken(TokenType.VAL_INTEGER);
                         int upperRange = currentToken.getIntegerValue();
+
+
                         expectToken(TokenType.RBRACKET);
                         expectToken(TokenType.OF);
                         // TODO: Read type;
                         // TODO: Declare array
                         readToken();
+                        switch (currentToken.getType()) {
+                            case INTEGER:
+                                break;
+                            case REAL:
+                                break;
+                            case BOOLEAN:
+                                break;
+                            case STRING:
+                                break;
+                            default:
+                                throw new ParseException("Only integer, real, boolean and string arrays are supported.", lexan.getLineNumber());
+                        }
                         variableNames.clear();
                         break;
 

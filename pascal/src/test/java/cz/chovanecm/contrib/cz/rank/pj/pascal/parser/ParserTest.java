@@ -189,12 +189,49 @@ public class ParserTest {
     }
 
     @Test
-    public void testArray() throws ParseException, UnknownProcedureNameException,
+    public void testArrayDeclaration() throws ParseException, UnknownProcedureNameException,
             IOException, LexicalException,
             UnknownVariableNameException, NotEnoughtParametersException {
-        parser = new Parser(new StringReader("var a  : array [1..10] of integer;\nbegin\n a[1]:=1;\n a[3]:=42;  \nend."));
+        parser = new Parser(new StringReader("var a  : array [1..10] of integer;\nbegin\n\nend."));
         parser.parse();
+        fail("Should test that it was really declared.");
     }
+
+    @Test(expected = ParseException.class)
+    public void testArrayOfArrayDeclaration() throws ParseException, UnknownProcedureNameException,
+            IOException, LexicalException,
+            UnknownVariableNameException, NotEnoughtParametersException {
+        parser = new Parser(new StringReader("var a  : array [1..10] of array;\nbegin\n\nend."));
+        parser.parse();
+        fail("Should fail on array of array.");
+    }
+
+    @Test
+    public void testArrayAssignment() throws Exception {
+        parser = new Parser(new StringReader("var a  : array [1..10] of integer;\n" +
+                "begin\n" +
+                "a[1]:=1;\n" +
+                "a[3]:=42;\n"
+                + " \nend."));
+        parser = new Parser(new StringReader("var a  : array [1..10] of integer;\nbegin\n\nend."));
+        parser.parse();
+        fail("Should test whether an assignment node is present.");
+    }
+
+    @Test
+    public void testReadingFromArray() throws Exception {
+        parser = new Parser(new StringReader("var a  : array [1..10] of integer, b : integer;\n" +
+                "begin\n" +
+                "a[1]:=1;\n" +
+                "b:=a[1];\n"
+                + " \nend."));
+        parser = new Parser(new StringReader("var a  : array [1..10] of integer;\nbegin\n\nend."));
+        parser.parse();
+        fail("Should test whether a read node is present.");
+    }
+
+
+
 /*
     public void testParenties() {
         parser = new Parser(new StringReader("var a  : integer;\nbegin a:=(1); \na :=(a); \nend."));

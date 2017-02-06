@@ -104,4 +104,6 @@ public interface AstFactoryInterface {
     ReadVariableNode createReadVariable(String id);
 
     StatementNode createDecrementVariable(ReadVariableNode variableNode);
+
+    StatementNode createDeclareSimpleArray(String id, long lowerBound, long upperBound, Class<?> type);
 }

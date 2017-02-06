@@ -9,6 +9,7 @@ import cz.chovanecm.pascal.truffle.nodes.expression.*;
 import cz.chovanecm.pascal.truffle.nodes.logical.OrOperator;
 import cz.chovanecm.pascal.truffle.nodes.relational.*;
 import cz.chovanecm.pascal.truffle.nodes.variables.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
@@ -205,5 +206,10 @@ public class TruffleAstFactory implements AstFactoryInterface {
         );
         WriteVariableNode writeBackNode = WriteVariableNodeGen.create(newLoopVariableValue, variableNode.getVariableName());
         return writeBackNode;
+    }
+
+    @Override
+    public StatementNode createDeclareSimpleArray(String id, long lowerBound, long upperBound, Class<?> type) {
+        throw new NotImplementedException();
     }
 }
