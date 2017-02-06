@@ -24,5 +24,5 @@ do
   esac
 done
 
-#echo "$JAVACMD $JAVA_ARGS -polyglot -cp ./target/classes com.oracle.truffle.bf.BFMain $PROGRAM_ARGS"
+echo "$JAVACMD $JAVA_ARGS -polyglot -cp ./target/classes com.oracle.truffle.bf.BFMain $PROGRAM_ARGS"
 $JAVACMD $JAVA_ARGS -polyglot -jar pascal/target/pascal-0.1-SNAPSHOT.jar $PROGRAM_ARGS
