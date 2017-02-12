@@ -27,7 +27,9 @@ public class WriteArrayVariableNodeTest {
                 astFactory.createWriteArrayAssignment("arr", astFactory.createConstant((long) index),
                         astFactory.createConstant(value)),
                 astFactory.createWriteArrayAssignment("arr", astFactory.createConstant(index + 1L),
-                        astFactory.createConstant(value * 2))
+                        astFactory.createConstant(value * 2)),
+                astFactory.createWriteArrayAssignment("arr", astFactory.createConstant((long) upperBound),
+                        astFactory.createConstant(value * 3))
         });
 
         VirtualFrame frame = TruffleRunner.runAndReturnFrame(block);
@@ -37,5 +39,6 @@ public class WriteArrayVariableNodeTest {
         ArrayStructure array = PascalTypesGen.asArrayStructure(FrameUtil.getObjectSafe(frame, slot));
         assertEquals(value, PascalTypesGen.asLongArray(array.getArray())[index - lowerBound]);
         assertEquals(value * 2, PascalTypesGen.asLongArray(array.getArray())[index + 1 - lowerBound]);
+        assertEquals(value * 3, PascalTypesGen.asLongArray(array.getArray())[upperBound - lowerBound]);
     }
 }

@@ -37,7 +37,7 @@ public class DeclareArrayVariableTest {
         ArrayStructure array = PascalTypesGen.expectArrayStructure(FrameUtil.getObjectSafe(virtualFrame, slot));
         assertEquals(lowerBound, array.getLowerBound());
         assertEquals(upperBound, array.getUpperBound());
-        assertEquals(upperBound - lowerBound, PascalTypesGen.asDoubleArray(array.getArray()).length);
+        assertEquals(upperBound + 1 - lowerBound, PascalTypesGen.asDoubleArray(array.getArray()).length);
     }
 
     @Test
@@ -58,6 +58,6 @@ public class DeclareArrayVariableTest {
         ArrayStructure array = PascalTypesGen.expectArrayStructure(FrameUtil.getObjectSafe(virtualFrame, slot));
         assertEquals(lowerBound, array.getLowerBound());
         assertEquals(upperBound, array.getUpperBound());
-        assertEquals(upperBound - lowerBound, PascalTypesGen.asStringArray(array.getArray()).length);
+        assertEquals(upperBound + 1 - lowerBound, PascalTypesGen.asStringArray(array.getArray()).length);
     }
 }

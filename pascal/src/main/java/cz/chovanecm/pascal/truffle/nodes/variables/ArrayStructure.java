@@ -11,7 +11,7 @@ public class ArrayStructure {
     public ArrayStructure(int lowerBound, int upperBound, Class<?> clazz) {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
-        int length = upperBound - lowerBound;
+        int length = upperBound + 1 - lowerBound;
         if (clazz == long.class) {
             array = new long[length];
         } else if (clazz == boolean.class) {
