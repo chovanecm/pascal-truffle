@@ -17,7 +17,6 @@ package cz.chovanecm.pascal;
 
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.vm.PolyglotEngine;
-import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
 import cz.chovanecm.pascal.truffle.PascalLanguage;
 import cz.rank.pj.pascal.NotEnoughtParametersException;
 import cz.rank.pj.pascal.UnknownExpressionTypeException;
@@ -33,11 +32,13 @@ import org.kohsuke.args4j.Option;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 
 /**
- *
  * @author martin
  */
 public class PascalMain {
@@ -46,8 +47,8 @@ public class PascalMain {
     private String sourceFile;
     private Reader inputReader;
 
-    @Option(name = "-no-truffle", usage = "Do not use Truffle, use a simple interpreter instead.")
-    private boolean doNotUseTruffle = false;
+    @Option(name = "-time", usage = "Print execution time.")
+    private boolean measureTime = false;
 
     /**
      * @param args the command line arguments
@@ -61,22 +62,26 @@ public class PascalMain {
 
     public void runProgram(String[] args) throws ParseException, IOException, LexicalException, UnknownVariableNameException, UnknownProcedureNameException, NotEnoughtParametersException, UnknownExpressionTypeException, NotUsableOperatorException, Exception {
         parseArgs(args);
-        Parser parser = new Parser(inputReader);
 
-        //Karel's behaviour:
-        if (doNotUseTruffle) {
-            parser.parse();
-            parser.run();
-        } else {
-            runProgramWithTruffle();
+        long userStart = getUserTime();
+        long cpuStart = getCpuTime();
+        long wallStart = getTotalTime();
+
+        runProgramWithTruffle();
+
+        if (measureTime) {
+            System.out.println();
+            System.out.println("real " + (getCpuTime() - cpuStart) / 1E9 + "s");
+            System.out.println("user " + (getUserTime() - userStart) / 1E9 + "s");
         }
+
         inputReader.close();
     }
 
     public void runProgramWithTruffle() throws Exception {
         Source.Builder builder = Source.newBuilder(inputReader);
         if (sourceFile != null) {
-            builder = builder.name(sourceFile);
+            builder = builder.name(sourceFile).mimeType(PascalLanguage.MIME_TYPE);
         } else {
             builder = builder.name("<interactive session>").interactive().mimeType(PascalLanguage.MIME_TYPE);
         }
@@ -109,6 +114,31 @@ public class PascalMain {
             inputReader = new InputStreamReader(System.in);
         }
 
+    }
+
+    /**
+     * Get CPU time in nanoseconds.
+     */
+    public long getCpuTime() {
+        ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+        return bean.isCurrentThreadCpuTimeSupported() ?
+                bean.getCurrentThreadCpuTime() : 0L;
+    }
+
+    /**
+     * Get user time in nanoseconds.
+     */
+    public long getUserTime() {
+        ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+        return bean.isCurrentThreadCpuTimeSupported() ?
+                bean.getCurrentThreadUserTime() : 0L;
+    }
+
+    /**
+     * Get system time in nanoseconds.
+     */
+    public long getTotalTime() {
+        return Instant.now().toEpochMilli();
     }
 
 }
