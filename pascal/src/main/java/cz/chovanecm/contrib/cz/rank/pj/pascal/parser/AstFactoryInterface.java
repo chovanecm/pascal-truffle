@@ -110,4 +110,8 @@ public interface AstFactoryInterface {
     StatementNode createWriteArrayAssignment(String arrayName, ExpressionNode writePosition, ExpressionNode value);
 
     ExpressionNode createReadArrayVariable(String arrayName, ExpressionNode readPosition);
+
+    ProcedureNode createReadProcedure();
+
+    ExpressionNode createIntegerDivisionOperator(ExpressionNode left, ExpressionNode right);
 }

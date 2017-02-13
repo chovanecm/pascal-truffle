@@ -221,4 +221,14 @@ public class TruffleAstFactory implements AstFactoryInterface {
     public ExpressionNode createReadArrayVariable(String arrayName, ExpressionNode readPosition) {
         return ReadArrayVariableNodeGen.create(readPosition, arrayName);
     }
+
+    @Override
+    public ProcedureNode createReadProcedure() {
+        return null;
+    }
+
+    @Override
+    public ExpressionNode createIntegerDivisionOperator(ExpressionNode left, ExpressionNode right) {
+        return IntegerDivisionNodeGen.create(left, right);
+    }
 }

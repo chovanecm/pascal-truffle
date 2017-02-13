@@ -91,6 +91,7 @@ public class Parser {
     private void initStaticMethods() {
         globalProcedures.put("writeln", getAstFactory().createWriteLnProcedure());
         globalProcedures.put("write", getAstFactory().createWriteProcedure());
+        globalProcedures.put("read", getAstFactory().createReadProcedure());
     }
 
     void parseProgram() throws ParseException, IOException, LexicalException {
@@ -669,7 +670,7 @@ public class Parser {
                     operatorFound = true;
                     break;
                 case DIV:
-                    ex = astFactory.createDivisionOperator(ex, primaryExpression());
+                    ex = astFactory.createIntegerDivisionOperator(ex, primaryExpression());
                     //ex = new DivideOperator(ex, primaryExpression());
                     operatorFound = true;
                     break;
@@ -766,7 +767,7 @@ public class Parser {
                     operatorFound = true;
                     break;
                 /*
-				case NOT:
+                case NOT:
 					ex = new NotOperator(parseExpression());
 					operatorFound = true;
 					break;

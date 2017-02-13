@@ -204,6 +204,7 @@ public class LexicalAnalyzator {
         keywords.put("false", TokenType.VAL_BOOLEAN);
         keywords.put("array", TokenType.ARRAY);
         keywords.put("of", TokenType.OF);
+        keywords.put("div", TokenType.DIV);
 
         logger.debug(keywords);
     }
