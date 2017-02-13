@@ -31,20 +31,20 @@ import static org.junit.Assert.assertEquals;
 public class ReadArrayVariableNodeTest {
     private AstFactoryInterface astFactory;
     private String arrayName;
-    private DebugExpressionNode[] expressionNodes;
+    private TestExpressionNode[] expressionNodes;
 
     @Before
     public void setup() {
         astFactory = new TruffleAstFactory();
         arrayName = "array";
-        expressionNodes = new DebugExpressionNode[]{
-                DebugExpressionNodeGen.create(astFactory.createReadArrayVariable(arrayName,
+        expressionNodes = new TestExpressionNode[]{
+                TestExpressionNodeGen.create(astFactory.createReadArrayVariable(arrayName,
                         astFactory.createConstant(0L))),
-                DebugExpressionNodeGen.create(astFactory.createReadArrayVariable(arrayName,
+                TestExpressionNodeGen.create(astFactory.createReadArrayVariable(arrayName,
                         astFactory.createConstant(1L))),
-                DebugExpressionNodeGen.create(astFactory.createReadArrayVariable(arrayName,
+                TestExpressionNodeGen.create(astFactory.createReadArrayVariable(arrayName,
                         astFactory.createConstant(2L))),
-                DebugExpressionNodeGen.create(astFactory.createReadArrayVariable(arrayName,
+                TestExpressionNodeGen.create(astFactory.createReadArrayVariable(arrayName,
                         astFactory.createConstant(3L)))
         };
     }

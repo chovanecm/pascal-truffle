@@ -6,8 +6,8 @@ import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
-import cz.chovanecm.pascal.truffle.nodes.variables.DebugExpressionNode;
-import cz.chovanecm.pascal.truffle.nodes.variables.DebugExpressionNodeGen;
+import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNode;
+import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNodeGen;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,7 +55,7 @@ public class OrOperatorTest {
                                         return false;
                                     }
                                 })));
-        DebugExpressionNode resultValue = DebugExpressionNodeGen.create(astFactory.createReadVariable("result"));
+        TestExpressionNode resultValue = TestExpressionNodeGen.create(astFactory.createReadVariable("result"));
         statements.add(resultValue);
         TruffleRunner.runAndReturnFrame(astFactory.createMainBlock(statements));
         assertEquals(true, resultValue.getBooleanValue());
@@ -84,7 +84,7 @@ public class OrOperatorTest {
                                         return true;
                                     }
                                 })));
-        DebugExpressionNode resultValue = DebugExpressionNodeGen.create(astFactory.createReadVariable("result"));
+        TestExpressionNode resultValue = TestExpressionNodeGen.create(astFactory.createReadVariable("result"));
         statements.add(resultValue);
         TruffleRunner.runAndReturnFrame(astFactory.createMainBlock(statements));
         assertEquals(true, resultValue.getBooleanValue());
@@ -114,7 +114,7 @@ public class OrOperatorTest {
                                         return false;
                                     }
                                 })));
-        DebugExpressionNode resultValue = DebugExpressionNodeGen.create(astFactory.createReadVariable("result"));
+        TestExpressionNode resultValue = TestExpressionNodeGen.create(astFactory.createReadVariable("result"));
         statements.add(resultValue);
         TruffleRunner.runAndReturnFrame(astFactory.createMainBlock(statements));
         assertEquals(false, resultValue.getBooleanValue());

@@ -13,7 +13,7 @@ import cz.chovanecm.pascal.truffle.nodes.StatementNode;
  * Remember the evaluated expression.
  */
 @NodeChild(value = "expression", type = ExpressionNode.class)
-public abstract class DebugExpressionNode extends StatementNode {
+public abstract class TestExpressionNode extends StatementNode {
     private Double doubleValue;
     private String stringValue;
     private Long longValue;

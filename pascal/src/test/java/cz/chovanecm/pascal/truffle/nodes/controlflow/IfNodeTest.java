@@ -5,8 +5,8 @@ import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
-import cz.chovanecm.pascal.truffle.nodes.variables.DebugExpressionNode;
-import cz.chovanecm.pascal.truffle.nodes.variables.DebugExpressionNodeGen;
+import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNode;
+import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNodeGen;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,15 +19,15 @@ import static org.junit.Assert.assertNull;
 public class IfNodeTest {
 
     AstFactoryInterface astFactory;
-    DebugExpressionNode thenBranchUsed;
-    DebugExpressionNode elseBranchUsed;
+    TestExpressionNode thenBranchUsed;
+    TestExpressionNode elseBranchUsed;
 
     @Before
     public void setUp() {
         astFactory = new TruffleAstFactory();
-        thenBranchUsed = DebugExpressionNodeGen.create(astFactory.createConstant(true));
+        thenBranchUsed = TestExpressionNodeGen.create(astFactory.createConstant(true));
         ;
-        elseBranchUsed = DebugExpressionNodeGen.create(astFactory.createConstant(true));
+        elseBranchUsed = TestExpressionNodeGen.create(astFactory.createConstant(true));
         ;
     }
 

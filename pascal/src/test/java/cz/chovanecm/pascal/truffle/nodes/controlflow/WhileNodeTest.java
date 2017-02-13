@@ -5,8 +5,8 @@ import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
-import cz.chovanecm.pascal.truffle.nodes.variables.DebugExpressionNode;
-import cz.chovanecm.pascal.truffle.nodes.variables.DebugExpressionNodeGen;
+import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNode;
+import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNodeGen;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,8 +24,8 @@ public class WhileNodeTest {
     List<StatementNode> statements;
     AstFactoryInterface astFactory;
     String counterVariableName = "counter";
-    DebugExpressionNode trackCounterValueInLoop;
-    DebugExpressionNode trackCounterValueAfterLoop;
+    TestExpressionNode trackCounterValueInLoop;
+    TestExpressionNode trackCounterValueAfterLoop;
 
     @Before
     public void setUp() {
@@ -33,8 +33,8 @@ public class WhileNodeTest {
         astFactory = new TruffleAstFactory();
         statements.add(astFactory.createIntegerVariable(counterVariableName));
         statements.add(astFactory.createGlobalAssignment(counterVariableName, astFactory.createConstant(0L)));
-        trackCounterValueInLoop = DebugExpressionNodeGen.create(astFactory.createReadVariable(counterVariableName));
-        trackCounterValueAfterLoop = DebugExpressionNodeGen.create(astFactory.createReadVariable(counterVariableName));
+        trackCounterValueInLoop = TestExpressionNodeGen.create(astFactory.createReadVariable(counterVariableName));
+        trackCounterValueAfterLoop = TestExpressionNodeGen.create(astFactory.createReadVariable(counterVariableName));
     }
 
 
