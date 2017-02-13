@@ -6,12 +6,14 @@ package cz.chovanecm.pascal.truffle.nodes.variables;
 public class ArrayStructure {
     private final int lowerBound;
     private final int upperBound;
+    private final Class<?> clazz;
     private Object array;
 
     public ArrayStructure(int lowerBound, int upperBound, Class<?> clazz) {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         int length = upperBound + 1 - lowerBound;
+        this.clazz = clazz;
         if (clazz == long.class) {
             array = new long[length];
         } else if (clazz == boolean.class) {
@@ -51,7 +53,16 @@ public class ArrayStructure {
 
 
     public Object read(int index) {
-        return ((Object[]) (this.array))[index - lowerBound];
+        //TODO: conditionprofile ?
+        if (clazz == long.class) {
+            return ((long[]) (this.array))[index - lowerBound];
+        } else if (clazz == boolean.class) {
+            return ((boolean[]) (this.array))[index - lowerBound];
+        } else if (clazz == double.class) {
+            return ((double[]) (this.array))[index - lowerBound];
+        } else {
+            return ((String[]) (this.array))[index - lowerBound];
+        }
     }
 
     public Object getArray() {

@@ -216,4 +216,9 @@ public class TruffleAstFactory implements AstFactoryInterface {
     public StatementNode createWriteArrayAssignment(String arrayName, ExpressionNode writePosition, ExpressionNode value) {
         return WriteArrayVariableNodeGen.create(value, writePosition, arrayName);
     }
+
+    @Override
+    public ExpressionNode createReadArrayVariable(String arrayName, ExpressionNode readPosition) {
+        return ReadArrayVariableNodeGen.create(readPosition, arrayName);
+    }
 }
