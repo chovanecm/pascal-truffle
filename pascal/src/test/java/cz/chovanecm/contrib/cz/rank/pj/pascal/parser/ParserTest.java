@@ -140,17 +140,23 @@ public class ParserTest {
 
     @Test
     public void testAsssigment() {
-        parser = new Parser(new StringReader("var a  : integer;\nbegin a:=3; a:=1; \nend."));
+        parser = new Parser(new StringReader("var a, b  : integer;\nbegin a:=3; b:=a; a:=1; \nend."));
 
         try {
             parser.parse();
             List<WriteVariableNode> assignments =
                     NodeUtil.findAllNodeInstances(parser.getEntryPoint(), WriteVariableNode.class);
-            assertEquals(2, assignments.size());
+            assertEquals(3, assignments.size());
             assertEquals("a", assignments.get(0).getVariableName());
-            assertEquals("a", assignments.get(1).getVariableName());
+            assertEquals("b", assignments.get(1).getVariableName());
+            assertEquals("a", assignments.get(2).getVariableName());
             helperTestConstantAssignment(assignments.get(0), 3L);
-            helperTestConstantAssignment(assignments.get(1), 1L);
+            helperTestConstantAssignment(assignments.get(2), 1L);
+
+            List<ReadVariableNode> readVariable =
+                    NodeUtil.findAllNodeInstances(assignments.get(1), ReadVariableNode.class);
+            assertEquals(1, readVariable.size());
+            assertEquals("a", readVariable.get(0).getVariableName());
 
         } catch (IOException e) {
             fail(e.getMessage());
@@ -242,13 +248,33 @@ public class ParserTest {
 
     @Test
     public void testReadingFromArray() throws Exception {
-        parser = new Parser(new StringReader("var a  : array [1..10] of integer, b : integer;\n" +
+        parser = new Parser(new StringReader("var b : integer;\n" +
+                "var a : array[1..4] of integer;\n" +
+                "var c: integer; \n" +
                 "begin\n" +
                 "a[1]:=1;\n" +
-                "b:=a[1];\n"
-                + " \nend."));
+                "b:=a[1];\n" +
+                "b:=a[b];\n" +
+                "\nend."));
+        ;
         parser.parse();
-        fail("Should test whether a read node is present.");
+        List<ReadArrayVariableNode> readNodes =
+                NodeUtil.findAllNodeInstances(parser.getEntryPoint(), ReadArrayVariableNode.class);
+        assertEquals(2, readNodes.size());
+        ReadArrayVariableNode readNode = readNodes.get(0);
+        assertEquals("a", readNode.getVariableName());
+        List<ConstantNode> indexNodes = NodeUtil.findAllNodeInstances(readNode, ConstantNode.class);
+        assertEquals(1, indexNodes.size());
+        ConstantNode indexNode = indexNodes.get(0);
+        assertEquals(1L, indexNode.getValue());
+
+        readNode = readNodes.get(1);
+        assertEquals("a", readNode.getVariableName());
+        List<ReadVariableNode> indexNodes2 = NodeUtil.findAllNodeInstances(readNode, ReadVariableNode.class);
+        // Must probably return two read variable nodes (one for itself and one for the 'b')
+        assertEquals(2, indexNodes2.size());
+        ReadVariableNode indexNode2 = indexNodes2.get(1);
+        assertEquals("b", indexNode2.getVariableName());
     }
 
 

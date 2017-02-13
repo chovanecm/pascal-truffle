@@ -593,7 +593,9 @@ public class Parser {
 
             case ID:
                 logger.debug("parseExpression:id name " + currentToken);
-                return astFactory.createReadVariable(currentToken.getName());
+
+                return readVariable(currentToken.getName());
+            //return astFactory.createReadVariable(currentToken.getName());
 
             // Unary minus
             case MINUS:
@@ -619,7 +621,21 @@ public class Parser {
         throw new ParseException("value expected!", lexan.getLineNumber());
     }
 
-    private ExpressionNode parseOperatorExpression() throws IOException, ParseException, LexicalException, UnknownVariableNameException {
+    private ExpressionNode readVariable(String variableName) throws IOException, LexicalException, ParseException,
+            UnknownVariableNameException {
+        if (readToken().getType() == TokenType.LBRACKET) {
+            ExpressionNode readArray = astFactory.createReadArrayVariable(variableName, parseExpression());
+            expectToken(TokenType.RBRACKET);
+            return readArray;
+        } else {
+            // Don't consume the token now
+            setTokenPushed(true);
+            return astFactory.createReadVariable(variableName);
+        }
+    }
+
+    private ExpressionNode parseOperatorExpression() throws IOException,
+            ParseException, LexicalException, UnknownVariableNameException {
         ExpressionNode ex = primaryExpression();
 
         logger.debug(ex);
