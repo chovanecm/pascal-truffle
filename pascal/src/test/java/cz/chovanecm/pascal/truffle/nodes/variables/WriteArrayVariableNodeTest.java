@@ -5,6 +5,7 @@ import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.PascalTypesGen;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class WriteArrayVariableNodeTest {
         int index = 15;
         int lowerBound = 10;
         int upperBound = 20;
-        StatementNode block = astFactory.createMainBlock(new StatementNode[]{
+        BlockNode block = astFactory.createMainBlock(new StatementNode[]{
                 astFactory.createDeclareSimpleArray("arr", lowerBound, upperBound, long.class),
                 astFactory.createWriteArrayAssignment("arr", astFactory.createConstant((long) index),
                         astFactory.createConstant(value)),

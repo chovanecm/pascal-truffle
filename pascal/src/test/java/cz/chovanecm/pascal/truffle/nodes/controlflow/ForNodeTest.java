@@ -3,6 +3,7 @@ package cz.chovanecm.pascal.truffle.nodes.controlflow;
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNodeGen;
@@ -53,7 +54,7 @@ public class ForNodeTest {
      * @param direction
      * @return
      */
-    public StatementNode generateCode(long start, long end, ForNodeFactory.ForDirection direction) {
+    public BlockNode generateCode(long start, long end, ForNodeFactory.ForDirection direction) {
         statements.add(
                 astFactory.createGlobalAssignment(finalValueVariableName,
                         astFactory.createConstant(end)));

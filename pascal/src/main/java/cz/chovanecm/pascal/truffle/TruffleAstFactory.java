@@ -1,5 +1,8 @@
 package cz.chovanecm.pascal.truffle;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.FrameSlotKind;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.*;
 import cz.chovanecm.pascal.truffle.nodes.controlflow.ForNodeFactory;
@@ -18,8 +21,14 @@ import java.util.List;
 public class TruffleAstFactory implements AstFactoryInterface {
     private ForNodeFactory forNodeFactory;
 
+    private FrameDescriptor globalFrameDescriptor = new FrameDescriptor();
+
     public TruffleAstFactory() {
-        this.forNodeFactory = new ForNodeFactory(this);
+        this.forNodeFactory = new ForNodeFactory(this, getGlobalFrameDescriptor());
+    }
+
+    public FrameDescriptor getGlobalFrameDescriptor() {
+        return globalFrameDescriptor;
     }
 
     @Override
@@ -33,18 +42,19 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public StatementNode createBlock(StatementNode[] statements) {
-        return new BlockNode(statements);
+    public BlockNode createBlock(StatementNode[] statements) {
+        return new BlockNode(statements, getGlobalFrameDescriptor());
     }
 
     @Override
-    public StatementNode createBlock(List<StatementNode> statements) {
-        return new BlockNode(statements);
+    public BlockNode createBlock(List<StatementNode> statements) {
+        return new BlockNode(statements, getGlobalFrameDescriptor());
     }
 
     @Override
     public WriteVariableNode createGlobalAssignment(String variable, ExpressionNode expression) {
-        return WriteVariableNodeGen.create(expression, variable);
+        FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(variable);
+        return WriteVariableNodeGen.create(expression, variable, slot);
     }
 
     @Override
@@ -99,22 +109,30 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public DeclareVariableNode createIntegerVariable(String id) {
-        return new DeclareLongVariable(id);
+        FrameSlot slot = getGlobalFrameDescriptor().addFrameSlot(id, FrameSlotKind.Long);
+        // dummy class
+        return new DeclareLongVariable(id, slot);
     }
 
     @Override
     public DeclareVariableNode createStringVariable(String id) {
-        return new DeclareStringVariable(id);
+        FrameSlot slot = getGlobalFrameDescriptor().addFrameSlot(id, FrameSlotKind.Object);
+        // dummy class
+        return new DeclareStringVariable(id, slot);
     }
 
     @Override
     public DeclareVariableNode createRealVariable(String id) {
-        return new DeclareRealVariable(id);
+
+        FrameSlot slot = getGlobalFrameDescriptor().addFrameSlot(id, FrameSlotKind.Double);
+        // dummy class
+        return new DeclareRealVariable(id, slot);
     }
 
     @Override
     public DeclareVariableNode createBooleanVariable(String id) {
-        return new DeclareBooleanVariable(id);
+        FrameSlot slot = getGlobalFrameDescriptor().addFrameSlot(id, FrameSlotKind.Boolean);
+        return new DeclareBooleanVariable(id, slot);
     }
 
     @Override
@@ -184,42 +202,50 @@ public class TruffleAstFactory implements AstFactoryInterface {
 
     @Override
     public ReadVariableNode createReadVariable(String id) {
-        return ReadVariableNodeGen.create(id);
+        FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(id);
+        return ReadVariableNodeGen.create(id, slot);
     }
 
     @Override
     public StatementNode createIncrementVariable(ReadVariableNode variableNode) {
+        FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(variableNode.getVariableName());
         ExpressionNode newLoopVariableValue = createPlusOperator(
-                ReadVariableNodeGen.create(variableNode.getVariableName()),
+                ReadVariableNodeGen.create(variableNode.getVariableName(), slot),
                 ConstantNodeGen.create(1L)
         );
-        WriteVariableNode writeBackNode = WriteVariableNodeGen.create(newLoopVariableValue, variableNode.getVariableName());
+
+        WriteVariableNode writeBackNode = WriteVariableNodeGen.create(newLoopVariableValue, variableNode.getVariableName(), slot);
         return writeBackNode;
     }
 
     @Override
     public StatementNode createDecrementVariable(ReadVariableNode variableNode) {
+        FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(variableNode.getVariableName());
         ExpressionNode newLoopVariableValue = createMinusOperator(
-                ReadVariableNodeGen.create(variableNode.getVariableName()),
+                ReadVariableNodeGen.create(variableNode.getVariableName(), slot),
                 ConstantNodeGen.create(1L)
         );
-        WriteVariableNode writeBackNode = WriteVariableNodeGen.create(newLoopVariableValue, variableNode.getVariableName());
+        WriteVariableNode writeBackNode = WriteVariableNodeGen.create(newLoopVariableValue,
+                variableNode.getVariableName(), slot);
         return writeBackNode;
     }
 
     @Override
     public DeclareVariableNode createDeclareSimpleArray(String id, int lowerBound, int upperBound, Class<?> type) {
-        return new DeclareArrayVariable(id, lowerBound, upperBound, type);
+        FrameSlot slot = getGlobalFrameDescriptor().addFrameSlot(id, FrameSlotKind.Object);
+        return new DeclareArrayVariable(id, slot, lowerBound, upperBound, type);
     }
 
     @Override
     public StatementNode createWriteArrayAssignment(String arrayName, ExpressionNode writePosition, ExpressionNode value) {
-        return WriteArrayVariableNodeGen.create(value, writePosition, arrayName);
+        FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(arrayName);
+        return WriteArrayVariableNodeGen.create(value, writePosition, arrayName, slot);
     }
 
     @Override
     public ExpressionNode createReadArrayVariable(String arrayName, ExpressionNode readPosition) {
-        return ReadArrayVariableNodeGen.create(readPosition, arrayName);
+        FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(arrayName);
+        return ReadArrayVariableNodeGen.create(readPosition, arrayName, slot);
     }
 
     @Override
@@ -231,4 +257,5 @@ public class TruffleAstFactory implements AstFactoryInterface {
     public ExpressionNode createIntegerDivisionOperator(ExpressionNode left, ExpressionNode right) {
         return IntegerDivisionNodeGen.create(left, right);
     }
+
 }

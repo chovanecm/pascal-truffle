@@ -15,6 +15,7 @@
  */
 package cz.chovanecm.pascal.truffle.nodes;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
@@ -31,14 +32,18 @@ public final class BlockNode extends StatementNode {
     @Children
     private final StatementNode [] statements;
 
-    public BlockNode(StatementNode[] statements) {
+    private final FrameDescriptor frameDescriptor;
+
+    public BlockNode(StatementNode[] statements, FrameDescriptor frameDescriptor) {
         this.statements = statements;
+        this.frameDescriptor = frameDescriptor;
     }
 
-    public BlockNode(List<StatementNode> statements) {
+    public BlockNode(List<StatementNode> statements, FrameDescriptor frameDescriptor) {
         StatementNode[] statementArray = new StatementNode[statements.size()];
         statementArray = statements.toArray(statementArray);
         this.statements = statementArray;
+        this.frameDescriptor = frameDescriptor;
     }
 
     @Override
@@ -50,9 +55,13 @@ public final class BlockNode extends StatementNode {
     }
 
     @Override
-    public StatementNode appendStatement(StatementNode statement) {
+    public BlockNode appendStatement(StatementNode statement, FrameDescriptor frameDescriptor) {
         StatementNode[] newStatements = Arrays.copyOf(statements, statements.length + 1);
         newStatements[newStatements.length - 1] = statement;
-        return new BlockNode(newStatements);
+        return new BlockNode(newStatements, frameDescriptor);
+    }
+
+    public FrameDescriptor getFrameDescriptor() {
+        return frameDescriptor;
     }
 }

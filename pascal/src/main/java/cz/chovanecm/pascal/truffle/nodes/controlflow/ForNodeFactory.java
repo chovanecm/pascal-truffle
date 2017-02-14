@@ -1,5 +1,6 @@
 package cz.chovanecm.pascal.truffle.nodes.controlflow;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
@@ -11,21 +12,23 @@ import cz.chovanecm.pascal.truffle.nodes.variables.WriteVariableNode;
  */
 public class ForNodeFactory {
     private AstFactoryInterface astFactory;
+    private FrameDescriptor frameDescriptor;
 
-    public ForNodeFactory(AstFactoryInterface astFactory) {
+    public ForNodeFactory(AstFactoryInterface astFactory, FrameDescriptor frameDescriptor) {
         this.astFactory = astFactory;
+        this.frameDescriptor = frameDescriptor;
     }
 
     public StatementNode generateForToNode(WriteVariableNode assignment, ExpressionNode finalExpression, StatementNode loopBody) {
         loopBody = wrapBodyWithControlVariableStep(assignment, loopBody, ForDirection.UP);
         ExpressionNode conditionNode = buildConditionNode(assignment, finalExpression, ForDirection.UP);
-        return assignment.appendStatement(astFactory.createWhile(conditionNode, loopBody));
+        return assignment.appendStatement(astFactory.createWhile(conditionNode, loopBody), getFrameDescriptor());
     }
 
     public StatementNode generateForDownToNode(WriteVariableNode assignment, ExpressionNode finalExpression, StatementNode loopBody) {
         loopBody = wrapBodyWithControlVariableStep(assignment, loopBody, ForDirection.DOWN);
         ExpressionNode conditionNode = buildConditionNode(assignment, finalExpression, ForDirection.DOWN);
-        return assignment.appendStatement(astFactory.createWhile(conditionNode, loopBody));
+        return assignment.appendStatement(astFactory.createWhile(conditionNode, loopBody), getFrameDescriptor());
     }
 
     /**
@@ -40,11 +43,12 @@ public class ForNodeFactory {
         if (direction == ForDirection.UP) {
             return loopBody.appendStatement(
                     astFactory.createIncrementVariable(
-                            astFactory.createReadVariable(assignment.getVariableName())));
+                            astFactory.createReadVariable(assignment.getVariableName())), getFrameDescriptor());
 
         } else if (direction == ForDirection.DOWN) {
             return loopBody.appendStatement(
-                    astFactory.createDecrementVariable(astFactory.createReadVariable(assignment.getVariableName())));
+                    astFactory.createDecrementVariable(astFactory.createReadVariable(assignment.getVariableName())),
+                    getFrameDescriptor());
         } else {
             throw new RuntimeException("Unexpected loop direction " + direction.toString());
         }
@@ -64,6 +68,10 @@ public class ForNodeFactory {
         } else {
             throw new RuntimeException("Unexpected loop direction " + direction.toString());
         }
+    }
+
+    public FrameDescriptor getFrameDescriptor() {
+        return frameDescriptor;
     }
 
     public enum ForDirection {

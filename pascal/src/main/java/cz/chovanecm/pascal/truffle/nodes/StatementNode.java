@@ -15,6 +15,7 @@
  */
 package cz.chovanecm.pascal.truffle.nodes;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 
@@ -35,7 +36,7 @@ public abstract class StatementNode extends Node {
      * @param statement
      * @return
      */
-    public StatementNode appendStatement(StatementNode statement) {
-        return new BlockNode(new StatementNode[]{this, statement});
+    public BlockNode appendStatement(StatementNode statement, FrameDescriptor frameDescriptor) {
+        return new BlockNode(new StatementNode[]{this, statement}, frameDescriptor);
     }
 }

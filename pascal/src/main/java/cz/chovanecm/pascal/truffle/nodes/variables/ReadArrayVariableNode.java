@@ -32,7 +32,7 @@ public abstract class ReadArrayVariableNode extends ReadVariableNode {
 
     @Specialization
     public Object executeRead(VirtualFrame frame, long index) {
-        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        FrameSlot slot = getFrameSlot();
         ArrayStructure arrayStructure = PascalTypesGen.asArrayStructure(frame.getValue(slot));
         return arrayStructure.read(Math.toIntExact(index));
     }

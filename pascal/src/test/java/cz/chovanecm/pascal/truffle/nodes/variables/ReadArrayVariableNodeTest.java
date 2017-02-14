@@ -19,6 +19,7 @@ package cz.chovanecm.pascal.truffle.nodes.variables;
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,14 +53,16 @@ public class ReadArrayVariableNodeTest {
     @Test
     public void testReadIntegerArrayVariable() {
 
-        StatementNode statement = astFactory.createMainBlock(new StatementNode[]{
+        BlockNode statement = astFactory.createMainBlock(new StatementNode[]{
                 astFactory.createDeclareSimpleArray(arrayName, 0, 3, long.class),
                 astFactory.createWriteArrayAssignment(arrayName, astFactory.createConstant(0L), astFactory.createConstant(0L)),
                 astFactory.createWriteArrayAssignment(arrayName, astFactory.createConstant(1L), astFactory.createConstant(10L)),
                 astFactory.createWriteArrayAssignment(arrayName, astFactory.createConstant(2L), astFactory.createConstant(20L)),
                 astFactory.createWriteArrayAssignment(arrayName, astFactory.createConstant(3L), astFactory.createConstant(30L)),
         });
-        statement = statement.appendStatement(astFactory.createBlock(expressionNodes));
+        BlockNode block = astFactory.createBlock(expressionNodes);
+        statement = statement.appendStatement(block,
+                statement.getFrameDescriptor());
         TruffleRunner.runAndReturnFrame(statement);
         assertEquals(new Long(0), expressionNodes[0].getLongValue());
         assertEquals(new Long(10), expressionNodes[1].getLongValue());
@@ -70,14 +73,14 @@ public class ReadArrayVariableNodeTest {
     @Test
     public void testReadStringArrayVariable() {
 
-        StatementNode statement = astFactory.createMainBlock(new StatementNode[]{
+        BlockNode statement = astFactory.createMainBlock(new StatementNode[]{
                 astFactory.createDeclareSimpleArray(arrayName, 0, 3, String.class),
                 astFactory.createWriteArrayAssignment(arrayName, astFactory.createConstant(0L), astFactory.createConstant("Zero")),
                 astFactory.createWriteArrayAssignment(arrayName, astFactory.createConstant(1L), astFactory.createConstant("One")),
                 astFactory.createWriteArrayAssignment(arrayName, astFactory.createConstant(2L), astFactory.createConstant("Two")),
                 astFactory.createWriteArrayAssignment(arrayName, astFactory.createConstant(3L), astFactory.createConstant("Three")),
         });
-        statement = statement.appendStatement(astFactory.createBlock(expressionNodes));
+        statement = statement.appendStatement(astFactory.createBlock(expressionNodes), statement.getFrameDescriptor());
         TruffleRunner.runAndReturnFrame(statement);
         assertEquals("Zero", expressionNodes[0].getStringValue());
         assertEquals("One", expressionNodes[1].getStringValue());

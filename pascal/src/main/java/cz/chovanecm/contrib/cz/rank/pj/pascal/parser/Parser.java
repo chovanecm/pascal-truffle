@@ -2,6 +2,7 @@ package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
 
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
@@ -13,7 +14,6 @@ import cz.rank.pj.pascal.lexan.LexicalException;
 import cz.rank.pj.pascal.operator.NotUsableOperatorException;
 import cz.rank.pj.pascal.parser.ParseException;
 import cz.rank.pj.pascal.parser.UnknownVariableNameException;
-import cz.rank.pj.pascal.statement.Statement;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class Parser {
     Token currentToken;
     LinkedHashMap<String, DeclareVariableNode> globalVariables;
     LinkedHashMap<String, ProcedureNode> globalProcedures;
-    private StatementNode entryPoint;
+    private BlockNode entryPoint;
     private boolean tokenPushed;
     private AstFactoryInterface astFactory = new TruffleAstFactory();
 
@@ -68,7 +68,7 @@ public class Parser {
         return variable;
     }
 
-    public StatementNode getEntryPoint() {
+    public BlockNode getEntryPoint() {
         return entryPoint;
     }
 
@@ -314,7 +314,7 @@ public class Parser {
 
     }
 
-    public StatementNode mainBegin() throws IOException, ParseException, LexicalException, NotEnoughtParametersException, UnknownProcedureNameException, UnknownVariableNameException {
+    public BlockNode mainBegin() throws IOException, ParseException, LexicalException, NotEnoughtParametersException, UnknownProcedureNameException, UnknownVariableNameException {
 
         // Declare variables and insert variable declarations
         List<StatementNode> statements = new ArrayList<>(globalVariables.values());
@@ -342,7 +342,7 @@ public class Parser {
             throw new ParseException('.', lexan.getLineNumber());
         }
 
-        StatementNode block = getAstFactory().createMainBlock(statements);
+        BlockNode block = getAstFactory().createMainBlock(statements);
         return block;
     }
 
@@ -868,8 +868,9 @@ public class Parser {
     }
 
     public void run() throws UnknownExpressionTypeException, NotUsableOperatorException {
-        logger.debug("Executing entrypoint...");
-//		logger.debug(entryPoint);
-        ((Statement) entryPoint).execute();
+        throw new UnsupportedOperationException("A relict from the original interpreter.");
+        //      logger.debug("Executing entrypoint...");
+        //		logger.debug(entryPoint);
+        //        ((Statement) entryPoint).execute();
     }
 }

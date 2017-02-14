@@ -3,8 +3,8 @@ package cz.chovanecm.pascal.truffle.nodes.controlflow;
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
-import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNodeGen;
 import org.junit.Before;
@@ -31,12 +31,16 @@ public class IfNodeTest {
         ;
     }
 
-    public StatementNode generateIfNode(IfNodeType nodeType, boolean shouldUseThenBranch) {
+    public BlockNode generateIfNode(IfNodeType nodeType, boolean shouldUseThenBranch) {
         ExpressionNode conditionNode = astFactory.createConstant(shouldUseThenBranch);
         if (nodeType == IfNodeType.WITH_ELSE_BRANCH) {
-            return astFactory.createIf(conditionNode, thenBranchUsed, elseBranchUsed);
+            return astFactory.createBlock(
+                    astFactory.createIf(conditionNode, thenBranchUsed, elseBranchUsed)
+            );
         } else {
-            return astFactory.createIf(conditionNode, thenBranchUsed, null);
+            return astFactory.createBlock(
+                    astFactory.createIf(conditionNode, thenBranchUsed, null)
+            );
         }
     }
 

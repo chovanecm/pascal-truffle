@@ -3,6 +3,7 @@ package cz.chovanecm.pascal.truffle.nodes.controlflow;
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import cz.chovanecm.pascal.truffle.nodes.variables.TestExpressionNode;
@@ -38,7 +39,7 @@ public class WhileNodeTest {
     }
 
 
-    public StatementNode generateCode(long numberOfPasses) {
+    public BlockNode generateCode(long numberOfPasses) {
         ExpressionNode conditionNode = astFactory.createNotEqualOperator(
                 astFactory.createReadVariable(counterVariableName),
                 astFactory.createConstant(numberOfPasses)

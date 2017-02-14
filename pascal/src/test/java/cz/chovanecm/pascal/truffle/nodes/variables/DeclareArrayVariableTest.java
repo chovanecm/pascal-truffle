@@ -9,6 +9,7 @@ import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.PascalTypesGen;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class DeclareArrayVariableTest {
         int lowerBound = 5;
         int upperBound = 10;
         AstFactoryInterface astFactory = new TruffleAstFactory();
-        StatementNode mainBlock = astFactory.createMainBlock(
+        BlockNode mainBlock = astFactory.createMainBlock(
                 new StatementNode[]{
                         astFactory.createDeclareSimpleArray(variableName, lowerBound, upperBound, double.class)
                 }
@@ -46,7 +47,7 @@ public class DeclareArrayVariableTest {
         int lowerBound = 5;
         int upperBound = 10;
         AstFactoryInterface astFactory = new TruffleAstFactory();
-        StatementNode mainBlock = astFactory.createMainBlock(
+        BlockNode mainBlock = astFactory.createMainBlock(
                 new StatementNode[]{
                         astFactory.createDeclareSimpleArray(variableName, lowerBound, upperBound, String.class)
                 }

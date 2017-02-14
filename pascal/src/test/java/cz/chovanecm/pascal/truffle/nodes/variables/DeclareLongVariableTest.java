@@ -6,6 +6,7 @@ import com.oracle.truffle.api.frame.FrameSlotKind;
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class DeclareLongVariableTest {
         String var1 = "variable1";
         String var2 = "variable2";
         AstFactoryInterface astFactory = new TruffleAstFactory();
-        StatementNode mainBlock = astFactory.createMainBlock(
+        BlockNode mainBlock = astFactory.createMainBlock(
                 new StatementNode[]{
                         astFactory.createIntegerVariable(var1),
                         astFactory.createIntegerVariable(var2),

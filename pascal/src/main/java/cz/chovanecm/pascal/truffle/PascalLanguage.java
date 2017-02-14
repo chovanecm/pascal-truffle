@@ -18,11 +18,11 @@ package cz.chovanecm.pascal.truffle;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.TruffleLanguage;
-import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.source.Source;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.Parser;
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.PascalRootNode;
 
 import java.io.BufferedReader;
@@ -56,10 +56,11 @@ public class PascalLanguage extends TruffleLanguage<PascalContext> {
 
 
         parser.parse();
+        BlockNode entryPoint = parser.getEntryPoint();
 
         // NOTE: unavailable section is just "to make it work"
         return Truffle.getRuntime().createCallTarget(new PascalRootNode(code.createUnavailableSection(),
-                new FrameDescriptor(), parser.getEntryPoint()));
+                entryPoint.getFrameDescriptor(), entryPoint));
     }
 
     @Override

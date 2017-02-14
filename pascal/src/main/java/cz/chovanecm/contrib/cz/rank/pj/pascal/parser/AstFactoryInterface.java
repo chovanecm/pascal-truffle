@@ -6,6 +6,7 @@
 package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
 
+import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
@@ -25,17 +26,21 @@ public interface AstFactoryInterface {
 
     ProcedureNode createWriteProcedure();
 
-    default StatementNode createMainBlock(StatementNode[] statements) {
+    default BlockNode createMainBlock(StatementNode[] statements) {
         return createBlock(statements);
     }
 
-    default StatementNode createMainBlock(List<StatementNode> statements) {
+    default BlockNode createMainBlock(List<StatementNode> statements) {
         return createBlock(statements);
     }
 
-    StatementNode createBlock(StatementNode[] statements);
+    BlockNode createBlock(StatementNode[] statements);
 
-    StatementNode createBlock(List<StatementNode> statements);
+    default BlockNode createBlock(StatementNode statement) {
+        return createBlock(new StatementNode[]{statement});
+    }
+
+    BlockNode createBlock(List<StatementNode> statements);
 
     public WriteVariableNode createGlobalAssignment(String variable, ExpressionNode expression);
 
@@ -114,4 +119,5 @@ public interface AstFactoryInterface {
     ProcedureNode createReadProcedure();
 
     ExpressionNode createIntegerDivisionOperator(ExpressionNode left, ExpressionNode right);
+
 }
