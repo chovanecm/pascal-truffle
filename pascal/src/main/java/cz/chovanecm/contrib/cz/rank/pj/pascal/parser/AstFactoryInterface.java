@@ -6,6 +6,7 @@
 package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
 
+import cz.chovanecm.pascal.exceptions.VariableNotDeclaredException;
 import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.ProcedureNode;
@@ -42,15 +43,15 @@ public interface AstFactoryInterface {
 
     BlockNode createBlock(List<StatementNode> statements);
 
-    public WriteVariableNode createGlobalAssignment(String variable, ExpressionNode expression);
+    public WriteVariableNode createGlobalAssignment(String variable, ExpressionNode expression) throws VariableNotDeclaredException;
 
     public StatementNode createWhile(ExpressionNode condition, StatementNode loopBody);
 
     public StatementNode createIf(ExpressionNode expression, StatementNode statementTrue, StatementNode statementFalse);
 
-    public StatementNode createForDownTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
+    public StatementNode createForDownTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) throws VariableNotDeclaredException;
 
-    public StatementNode createForTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement);
+    public StatementNode createForTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) throws VariableNotDeclaredException;
 
     public ExpressionNode createConstant(Long integerValue);
 
@@ -106,15 +107,15 @@ public interface AstFactoryInterface {
      */
     StatementNode createIncrementVariable(ReadVariableNode variableNode);
 
-    ReadVariableNode createReadVariable(String id);
+    ReadVariableNode createReadVariable(String id) throws VariableNotDeclaredException;
 
     StatementNode createDecrementVariable(ReadVariableNode variableNode);
 
     DeclareVariableNode createDeclareSimpleArray(String id, int lowerBound, int upperBound, Class<?> type);
 
-    StatementNode createWriteArrayAssignment(String arrayName, ExpressionNode writePosition, ExpressionNode value);
+    StatementNode createWriteArrayAssignment(String arrayName, ExpressionNode writePosition, ExpressionNode value) throws VariableNotDeclaredException;
 
-    ExpressionNode createReadArrayVariable(String arrayName, ExpressionNode readPosition);
+    ExpressionNode createReadArrayVariable(String arrayName, ExpressionNode readPosition) throws VariableNotDeclaredException;
 
     ProcedureNode createReadProcedure();
 

@@ -3,6 +3,7 @@ package cz.chovanecm.pascal.truffle.nodes.variables;
 import com.oracle.truffle.api.frame.*;
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
+import cz.chovanecm.pascal.exceptions.VariableNotDeclaredException;
 import cz.chovanecm.pascal.truffle.PascalTypesGen;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.BlockNode;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class WriteArrayVariableNodeTest {
 
     @Test
-    public void testWriteToArray() {
+    public void testWriteToArray() throws VariableNotDeclaredException {
         AstFactoryInterface astFactory = new TruffleAstFactory();
         long value = 42;
         int index = 15;

@@ -1,6 +1,7 @@
 package cz.chovanecm.contrib.cz.rank.pj.pascal.parser;
 
 
+import cz.chovanecm.pascal.exceptions.VariableNotDeclaredException;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
@@ -527,10 +528,18 @@ public class Parser {
         logger.debug(currentToken);
 
         if (downto) {
-            return astFactory.createForDownTo((WriteVariableNode) assignmentStatement, finalExpression, executeStatement);
+            try {
+                return astFactory.createForDownTo((WriteVariableNode) assignmentStatement, finalExpression, executeStatement);
+            } catch (VariableNotDeclaredException e) {
+                throw new UnknownVariableNameException(e.getMessage());
+            }
             //return new ForDownto((Assignment) assignmentStatement, finalExpression, executeStatement);
         } else {
-            return astFactory.createForTo((WriteVariableNode) assignmentStatement, finalExpression, executeStatement);
+            try {
+                return astFactory.createForTo((WriteVariableNode) assignmentStatement, finalExpression, executeStatement);
+            } catch (VariableNotDeclaredException e) {
+                throw new UnknownVariableNameException(e.getMessage());
+            }
             //return new ForTo((Assignment) assignmentStatement, finalExpression, executeStatement);
         }
     }
@@ -625,13 +634,22 @@ public class Parser {
     private ExpressionNode readVariable(String variableName) throws IOException, LexicalException, ParseException,
             UnknownVariableNameException {
         if (readToken().getType() == TokenType.LBRACKET) {
-            ExpressionNode readArray = astFactory.createReadArrayVariable(variableName, parseExpression());
+            ExpressionNode readArray = null;
+            try {
+                readArray = astFactory.createReadArrayVariable(variableName, parseExpression());
+            } catch (VariableNotDeclaredException e) {
+                throw new UnknownVariableNameException(e.getMessage());
+            }
             expectToken(TokenType.RBRACKET);
             return readArray;
         } else {
             // Don't consume the token now
             setTokenPushed(true);
-            return astFactory.createReadVariable(variableName);
+            try {
+                return astFactory.createReadVariable(variableName);
+            } catch (VariableNotDeclaredException e) {
+                throw new UnknownVariableNameException(e.getMessage());
+            }
         }
     }
 
@@ -782,7 +800,12 @@ public class Parser {
     }
 
     private StatementNode parseAssignment(String variable) throws IOException, LexicalException, ParseException, UnknownVariableNameException {
-        StatementNode st = astFactory.createGlobalAssignment(variable, parseExpression()); //new Assignment(DeclareVariableNode, parseExpression());
+        StatementNode st = null; //new Assignment(DeclareVariableNode, parseExpression());
+        try {
+            st = astFactory.createGlobalAssignment(variable, parseExpression());
+        } catch (VariableNotDeclaredException e) {
+            throw new UnknownVariableNameException(e.getMessage());
+        }
 
         logger.debug("parseAssignment token:" + currentToken);
         /*
@@ -798,7 +821,11 @@ public class Parser {
         expectToken(TokenType.RBRACKET);
         expectToken(TokenType.ASSIGNMENT);
         ExpressionNode value = parseExpression();
-        return astFactory.createWriteArrayAssignment(variableName, index, value);
+        try {
+            return astFactory.createWriteArrayAssignment(variableName, index, value);
+        } catch (VariableNotDeclaredException e) {
+            throw new UnknownVariableNameException(e.getMessage());
+        }
     }
 
     public StatementNode parse() throws ParseException, IOException, LexicalException, UnknownVariableNameException, UnknownProcedureNameException, NotEnoughtParametersException {

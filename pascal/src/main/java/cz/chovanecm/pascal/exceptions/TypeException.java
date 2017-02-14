@@ -3,7 +3,7 @@ package cz.chovanecm.pascal.exceptions;
 /**
  * Created by martin on 1/24/17.
  */
-public class TypeException extends PascalException {
+public class TypeException extends PascalRuntimeException {
     public TypeException() {
     }
 

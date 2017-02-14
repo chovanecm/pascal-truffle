@@ -2,6 +2,7 @@ package cz.chovanecm.pascal.truffle.nodes.controlflow;
 
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
+import cz.chovanecm.pascal.exceptions.VariableNotDeclaredException;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
@@ -29,7 +30,7 @@ public class ForNodeTest {
     TestExpressionNode trackFinalValueAfterLoop;
 
     @Before
-    public void setUp() {
+    public void setUp() throws VariableNotDeclaredException {
         statements = new ArrayList<>();
         astFactory = new TruffleAstFactory();
         statements.add(astFactory.createIntegerVariable(controlVariableName));
@@ -54,7 +55,7 @@ public class ForNodeTest {
      * @param direction
      * @return
      */
-    public BlockNode generateCode(long start, long end, ForNodeFactory.ForDirection direction) {
+    public BlockNode generateCode(long start, long end, ForNodeFactory.ForDirection direction) throws VariableNotDeclaredException {
         statements.add(
                 astFactory.createGlobalAssignment(finalValueVariableName,
                         astFactory.createConstant(end)));
@@ -82,13 +83,13 @@ public class ForNodeTest {
     }
 
     @Test
-    public void testANeverRunningLoop() {
+    public void testANeverRunningLoop() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(0, -1, ForNodeFactory.ForDirection.UP));
         assertNull("The body loop should NOT be called.", trackControlVariableInLoop.getLongValue());
     }
 
     @Test
-    public void testOnePassLoopDirectionUp() {
+    public void testOnePassLoopDirectionUp() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(1, 1, ForNodeFactory.ForDirection.UP));
         assertEquals("The control variable should be 1, because the loop body should be entered exactly once.",
                 new Long(1), trackControlVariableInLoop.getLongValue());
@@ -96,28 +97,28 @@ public class ForNodeTest {
     }
 
     @Test
-    public void testOnePassLoopDirectionDown() {
+    public void testOnePassLoopDirectionDown() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(1, 1, ForNodeFactory.ForDirection.DOWN));
         assertEquals("The control variable should be 1, because the loop body should be entered exactly once.",
                 new Long(1), trackControlVariableInLoop.getLongValue());
     }
 
     @Test
-    public void testTenPassesLoopDirectionDown() {
+    public void testTenPassesLoopDirectionDown() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(50, 41, ForNodeFactory.ForDirection.DOWN));
         assertEquals("The control variable should be 41, because we started at 50 and went down to 41.",
                 new Long(41), trackControlVariableInLoop.getLongValue());
     }
 
     @Test
-    public void testTenPassesLoopDirectionUp() {
+    public void testTenPassesLoopDirectionUp() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(-19, -10, ForNodeFactory.ForDirection.UP));
         assertEquals("The control variable should be 10, because we started at -19 and went to -10.",
                 new Long(-10), trackControlVariableInLoop.getLongValue());
     }
 
     @Test
-    public void testManyPassesLoopDirectionUp() {
+    public void testManyPassesLoopDirectionUp() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(0, 1000000, ForNodeFactory.ForDirection.UP));
         assertEquals("The control variable should be 10, because we started at -19 and went to -10.",
                 new Long(1000000), trackControlVariableInLoop.getLongValue());

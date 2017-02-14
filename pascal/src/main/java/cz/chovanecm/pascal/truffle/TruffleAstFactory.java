@@ -4,6 +4,7 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
+import cz.chovanecm.pascal.exceptions.VariableNotDeclaredException;
 import cz.chovanecm.pascal.truffle.nodes.*;
 import cz.chovanecm.pascal.truffle.nodes.controlflow.ForNodeFactory;
 import cz.chovanecm.pascal.truffle.nodes.controlflow.IfNode;
@@ -52,8 +53,10 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public WriteVariableNode createGlobalAssignment(String variable, ExpressionNode expression) {
+    public WriteVariableNode createGlobalAssignment(String variable, ExpressionNode expression)
+            throws VariableNotDeclaredException {
         FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(variable);
+        checkSlotNotNull(slot, variable);
         return WriteVariableNodeGen.create(expression, variable, slot);
     }
 
@@ -68,12 +71,12 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public StatementNode createForDownTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) {
+    public StatementNode createForDownTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) throws VariableNotDeclaredException {
         return forNodeFactory.generateForDownToNode(assignmentStatement, finalExpression, executeStatement);
     }
 
     @Override
-    public StatementNode createForTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) {
+    public StatementNode createForTo(WriteVariableNode assignmentStatement, ExpressionNode finalExpression, StatementNode executeStatement) throws VariableNotDeclaredException {
         return forNodeFactory.generateForToNode(assignmentStatement, finalExpression, executeStatement);
     }
 
@@ -201,8 +204,9 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public ReadVariableNode createReadVariable(String id) {
+    public ReadVariableNode createReadVariable(String id) throws VariableNotDeclaredException {
         FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(id);
+        checkSlotNotNull(slot, id);
         return ReadVariableNodeGen.create(id, slot);
     }
 
@@ -237,14 +241,17 @@ public class TruffleAstFactory implements AstFactoryInterface {
     }
 
     @Override
-    public StatementNode createWriteArrayAssignment(String arrayName, ExpressionNode writePosition, ExpressionNode value) {
+    public StatementNode createWriteArrayAssignment(String arrayName, ExpressionNode writePosition, ExpressionNode value) throws VariableNotDeclaredException {
         FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(arrayName);
+        checkSlotNotNull(slot, arrayName);
         return WriteArrayVariableNodeGen.create(value, writePosition, arrayName, slot);
     }
 
     @Override
-    public ExpressionNode createReadArrayVariable(String arrayName, ExpressionNode readPosition) {
+    public ExpressionNode createReadArrayVariable(String arrayName, ExpressionNode readPosition)
+            throws VariableNotDeclaredException {
         FrameSlot slot = getGlobalFrameDescriptor().findFrameSlot(arrayName);
+        checkSlotNotNull(slot, arrayName);
         return ReadArrayVariableNodeGen.create(readPosition, arrayName, slot);
     }
 
@@ -258,4 +265,9 @@ public class TruffleAstFactory implements AstFactoryInterface {
         return IntegerDivisionNodeGen.create(left, right);
     }
 
+    private void checkSlotNotNull(FrameSlot frameSlot, String name) throws VariableNotDeclaredException {
+        if (frameSlot == null) {
+            throw new VariableNotDeclaredException(name);
+        }
+    }
 }

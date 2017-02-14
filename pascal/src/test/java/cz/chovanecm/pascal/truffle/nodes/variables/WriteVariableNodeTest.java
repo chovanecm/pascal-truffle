@@ -4,6 +4,7 @@ import com.oracle.truffle.api.frame.*;
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
 import cz.chovanecm.pascal.exceptions.TypeException;
+import cz.chovanecm.pascal.exceptions.VariableNotDeclaredException;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import org.junit.Before;
@@ -32,7 +33,7 @@ public class WriteVariableNodeTest {
     }
 
     @Test
-    public void testLongAssignment() {
+    public void testLongAssignment() throws VariableNotDeclaredException {
         long storedValue = 42;
         statements.add(astFactory.createGlobalAssignment(longVariableName,
                 astFactory.createConstant(storedValue)
@@ -45,7 +46,7 @@ public class WriteVariableNodeTest {
     }
 
     @Test
-    public void testStringAssignment() {
+    public void testStringAssignment() throws VariableNotDeclaredException {
         String storedValue = "Pascal in JVM";
         statements.add(astFactory.createGlobalAssignment(stringVariableName,
                 astFactory.createConstant(storedValue)
@@ -58,7 +59,7 @@ public class WriteVariableNodeTest {
     }
 
     @Test(expected = TypeException.class)
-    public void testDoubleToLongAssignment() {
+    public void testDoubleToLongAssignment() throws VariableNotDeclaredException {
         double storedValue = 0.25;
         statements.add(astFactory.createGlobalAssignment(longVariableName,
                 astFactory.createConstant(storedValue)
@@ -70,7 +71,7 @@ public class WriteVariableNodeTest {
     }
 
     @Test(expected = TypeException.class)
-    public void testDoubleToStringAssignment() {
+    public void testDoubleToStringAssignment() throws VariableNotDeclaredException {
         double storedValue = 0.25;
         statements.add(astFactory.createGlobalAssignment(stringVariableName,
                 astFactory.createConstant(storedValue)
@@ -82,7 +83,7 @@ public class WriteVariableNodeTest {
     }
 
     @Test(expected = TypeException.class)
-    public void testStringToLongAssignment() {
+    public void testStringToLongAssignment() throws VariableNotDeclaredException {
         String storedValue = "Pascal in JVM";
         statements.add(astFactory.createGlobalAssignment(longVariableName,
                 astFactory.createConstant(storedValue)

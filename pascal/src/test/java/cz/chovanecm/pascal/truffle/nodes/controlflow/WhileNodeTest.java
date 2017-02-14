@@ -2,6 +2,7 @@ package cz.chovanecm.pascal.truffle.nodes.controlflow;
 
 import cz.chovanecm.TruffleRunner;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
+import cz.chovanecm.pascal.exceptions.VariableNotDeclaredException;
 import cz.chovanecm.pascal.truffle.TruffleAstFactory;
 import cz.chovanecm.pascal.truffle.nodes.BlockNode;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
@@ -29,7 +30,7 @@ public class WhileNodeTest {
     TestExpressionNode trackCounterValueAfterLoop;
 
     @Before
-    public void setUp() {
+    public void setUp() throws VariableNotDeclaredException {
         statements = new ArrayList<>();
         astFactory = new TruffleAstFactory();
         statements.add(astFactory.createIntegerVariable(counterVariableName));
@@ -39,7 +40,7 @@ public class WhileNodeTest {
     }
 
 
-    public BlockNode generateCode(long numberOfPasses) {
+    public BlockNode generateCode(long numberOfPasses) throws VariableNotDeclaredException {
         ExpressionNode conditionNode = astFactory.createNotEqualOperator(
                 astFactory.createReadVariable(counterVariableName),
                 astFactory.createConstant(numberOfPasses)
@@ -57,7 +58,7 @@ public class WhileNodeTest {
     }
 
     @Test
-    public void testANeverRunningLoop() {
+    public void testANeverRunningLoop() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(0));
         assertNull("The body loop should NOT be called.", trackCounterValueInLoop.getLongValue());
         assertEquals("The counter value should be zero, because the loop body has not been called.",
@@ -65,7 +66,7 @@ public class WhileNodeTest {
     }
 
     @Test
-    public void testOnePassLoop() {
+    public void testOnePassLoop() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(1));
         assertEquals("The last captured value in the loop should be 0.",
                 new Long(0), trackCounterValueInLoop.getLongValue());
@@ -74,7 +75,7 @@ public class WhileNodeTest {
     }
 
     @Test
-    public void testTennPassesLoop() {
+    public void testTennPassesLoop() throws VariableNotDeclaredException {
         TruffleRunner.runAndReturnFrame(generateCode(10));
         assertEquals("The last captured value in the loop should be 9.",
                 new Long(9), trackCounterValueInLoop.getLongValue());

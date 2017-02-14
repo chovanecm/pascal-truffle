@@ -2,6 +2,7 @@ package cz.chovanecm.pascal.truffle.nodes.controlflow;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import cz.chovanecm.contrib.cz.rank.pj.pascal.parser.AstFactoryInterface;
+import cz.chovanecm.pascal.exceptions.VariableNotDeclaredException;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
 import cz.chovanecm.pascal.truffle.nodes.expression.EvaluateOnlyOnceNode;
@@ -19,13 +20,13 @@ public class ForNodeFactory {
         this.frameDescriptor = frameDescriptor;
     }
 
-    public StatementNode generateForToNode(WriteVariableNode assignment, ExpressionNode finalExpression, StatementNode loopBody) {
+    public StatementNode generateForToNode(WriteVariableNode assignment, ExpressionNode finalExpression, StatementNode loopBody) throws VariableNotDeclaredException {
         loopBody = wrapBodyWithControlVariableStep(assignment, loopBody, ForDirection.UP);
         ExpressionNode conditionNode = buildConditionNode(assignment, finalExpression, ForDirection.UP);
         return assignment.appendStatement(astFactory.createWhile(conditionNode, loopBody), getFrameDescriptor());
     }
 
-    public StatementNode generateForDownToNode(WriteVariableNode assignment, ExpressionNode finalExpression, StatementNode loopBody) {
+    public StatementNode generateForDownToNode(WriteVariableNode assignment, ExpressionNode finalExpression, StatementNode loopBody) throws VariableNotDeclaredException {
         loopBody = wrapBodyWithControlVariableStep(assignment, loopBody, ForDirection.DOWN);
         ExpressionNode conditionNode = buildConditionNode(assignment, finalExpression, ForDirection.DOWN);
         return assignment.appendStatement(astFactory.createWhile(conditionNode, loopBody), getFrameDescriptor());
@@ -39,7 +40,7 @@ public class ForNodeFactory {
      * @param direction
      * @return
      */
-    private StatementNode wrapBodyWithControlVariableStep(WriteVariableNode assignment, StatementNode loopBody, ForDirection direction) {
+    private StatementNode wrapBodyWithControlVariableStep(WriteVariableNode assignment, StatementNode loopBody, ForDirection direction) throws VariableNotDeclaredException {
         if (direction == ForDirection.UP) {
             return loopBody.appendStatement(
                     astFactory.createIncrementVariable(
@@ -54,7 +55,7 @@ public class ForNodeFactory {
         }
     }
 
-    private ExpressionNode buildConditionNode(WriteVariableNode assignment, ExpressionNode finalValue, ForDirection direction) {
+    private ExpressionNode buildConditionNode(WriteVariableNode assignment, ExpressionNode finalValue, ForDirection direction) throws VariableNotDeclaredException {
         if (direction == ForDirection.UP) {
             return astFactory.createLessEqualOperator(
                     astFactory.createReadVariable(assignment.getVariableName()),
