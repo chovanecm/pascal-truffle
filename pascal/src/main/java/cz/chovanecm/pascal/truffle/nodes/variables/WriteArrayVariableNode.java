@@ -22,7 +22,7 @@ public abstract class WriteArrayVariableNode extends WriteVariableNode {
     public abstract ExpressionNode getIndex();
 
     private void execute(VirtualFrame frame, Consumer<ArrayStructure> function) {
-        FrameSlot slot = frame.getFrameDescriptor().findFrameSlot(getVariableName());
+        FrameSlot slot = getFrameSlot();
         try {
             ArrayStructure array = PascalTypesGen.expectArrayStructure(FrameUtil.getObjectSafe(frame, slot));
             function.accept(array);
