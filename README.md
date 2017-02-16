@@ -4,6 +4,17 @@ This project implements a subset of Pascal language by Niklaus Wirth from Swiss 
 
 It uses Oracle's [Truffle](http://www.oracle.com/technetwork/oracle-labs/program-languages/overview/index-2301583.html) to achieve higher performance by allowing just-in-time compilation of the interpreted Pascal code.
 
+## Features
+
+The language (should) support:
+
+- only the "main" procedure (no user-defined functions or procedures)
+- integer, real, boolean and string variables
+- static 1-D arrays of integers, real, boolean and string defined by `[from..to]` range.
+- write and writeln (no read, no readln)!!!
+- +, -, *, /, div
+- if, while, for ... to and for ... downto
+
 ## Dependencies
 
 - [GraalVM JDK 0.20](http://www.oracle.com/technetwork/oracle-labs/program-languages/downloads/index.html)
