@@ -36,7 +36,7 @@ The respective versions are [tagged](https://github.com/chovanecm/pascal-truffle
 - FreePascal: program compiled using fpc
 - v0.2 - pascal-truffle with the Truffle API and no optimisations. Often uses "slow operations" (interpreter mode)
 - v0.3 - pascal-truffle - avoiding slow operations by preallocating FrameSlots
-- v0.4 - pascal-truffle - uses RepeatingNode to speedup loops
+- v0.4 - pascal-truffle - uses RepeatingNode to speed loops up.
 
 The following table shows the time needed to execute respective programs.
 
