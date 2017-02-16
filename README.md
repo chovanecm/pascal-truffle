@@ -14,6 +14,8 @@ The language (should) support:
 - write and writeln (no read, no readln)!!!
 - +, -, *, /, div
 - if, while, for ... to and for ... downto
+- and, or, not
+- <, >, <=, >=, <>, =
 
 ## Dependencies
 
