@@ -1,5 +1,6 @@
 package cz.chovanecm.pascal.truffle.nodes.variables;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import cz.chovanecm.pascal.exceptions.TypeException;
@@ -15,6 +16,7 @@ public class DeclareArrayVariable extends DeclareVariableNode {
     public DeclareArrayVariable(String name, FrameSlot frameSlot, int lowerBound, int upperBound, Class<?> clazz) {
         super(name, frameSlot);
         if (lowerBound > upperBound) {
+            CompilerDirectives.transferToInterpreter();
             throw new TypeException(String.format("Array lower bound (%d) should not be higher as the upper bound (%d)", lowerBound, upperBound));
         }
         this.lowerBound = lowerBound;

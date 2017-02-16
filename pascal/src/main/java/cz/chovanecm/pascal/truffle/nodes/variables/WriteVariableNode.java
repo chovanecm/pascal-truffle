@@ -1,5 +1,6 @@
 package cz.chovanecm.pascal.truffle.nodes.variables;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.*;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotKind;
@@ -36,6 +37,7 @@ public abstract class WriteVariableNode extends StatementNode {
     public void writeBoolean(VirtualFrame frame, boolean value) throws TypeException {
         FrameSlot slot = getFrameSlot();
         if (slot.getKind() != FrameSlotKind.Boolean) {
+            CompilerDirectives.transferToInterpreter();
             throw new TypeException("Trying to write a boolean value to variable " + getVariableName());
         }
         frame.setBoolean(slot, value);
@@ -45,6 +47,7 @@ public abstract class WriteVariableNode extends StatementNode {
     public void writeDouble(VirtualFrame frame, double value) throws TypeException {
         FrameSlot slot = getFrameSlot();
         if (slot.getKind() != FrameSlotKind.Double) {
+            CompilerDirectives.transferToInterpreter();
             throw new TypeException("Trying to write a double value to variable " + getVariableName());
         }
         frame.setDouble(slot, value);
@@ -54,6 +57,7 @@ public abstract class WriteVariableNode extends StatementNode {
     public void writeString(VirtualFrame frame, String value) throws TypeException {
         FrameSlot slot = getFrameSlot();
         if (slot.getKind() != FrameSlotKind.Object) {
+            CompilerDirectives.transferToInterpreter();
             throw new TypeException("Trying to write a String value to variable " + getVariableName());
         }
         frame.setObject(slot, value);

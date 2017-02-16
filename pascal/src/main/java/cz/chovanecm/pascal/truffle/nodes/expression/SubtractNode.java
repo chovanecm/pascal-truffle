@@ -1,5 +1,6 @@
 package cz.chovanecm.pascal.truffle.nodes.expression;
 
+import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
@@ -30,6 +31,7 @@ public abstract class SubtractNode extends BinaryNode {
     }
 
     @Specialization
+    @CompilerDirectives.TruffleBoundary
     public Object minus(Object left, Object right) {
         throw new IllegalArgumentException("Invalid arguments");
     }
