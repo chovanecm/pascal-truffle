@@ -27,4 +27,9 @@ public abstract class ParenthesisExpressionNode extends ExpressionNode {
         return expression;
     }
 
+    @Specialization
+    public boolean execute(boolean expression) {
+        return expression;
+    }
+
 }
