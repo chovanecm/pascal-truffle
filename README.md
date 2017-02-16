@@ -1,6 +1,6 @@
 # Pascal in Truffle
 
-This project implements a subset of Pascal language by Niklaus Wirth from Swiss Federal Institute of Technology in Zürich (aka ETH Zürich).
+This project implements a subset of Pascal language by Niklaus Wirth from the Swiss Federal Institute of Technology in Zürich (aka ETH Zürich).
 
 It uses Oracle's [Truffle](http://www.oracle.com/technetwork/oracle-labs/program-languages/overview/index-2301583.html) to achieve higher performance by allowing just-in-time compilation of the interpreted Pascal code.
 
