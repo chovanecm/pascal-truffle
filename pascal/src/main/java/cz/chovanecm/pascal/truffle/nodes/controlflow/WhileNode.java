@@ -6,6 +6,7 @@ import com.oracle.truffle.api.nodes.LoopNode;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RepeatingNode;
+import com.oracle.truffle.api.profiles.ConditionProfile;
 import cz.chovanecm.pascal.truffle.PascalTypesGen;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
@@ -26,6 +27,7 @@ public class WhileNode extends StatementNode {
     public WhileNode(ExpressionNode conditionNode, StatementNode loopNode) {
 
         loop = Truffle.getRuntime().createLoopNode(new WhileRepeatingNode(conditionNode, loopNode));
+
     }
 
     @Override
@@ -34,6 +36,7 @@ public class WhileNode extends StatementNode {
     }
 
     public static class WhileRepeatingNode extends Node implements RepeatingNode {
+        private final ConditionProfile whileCondition;
         @Child
         private ExpressionNode conditionNode;
         @Child
@@ -42,11 +45,12 @@ public class WhileNode extends StatementNode {
         public WhileRepeatingNode(ExpressionNode conditionNode, StatementNode loopNode) {
             this.conditionNode = conditionNode;
             this.loopNode = loopNode;
+            whileCondition = ConditionProfile.createBinaryProfile();
         }
 
         @Override
         public boolean executeRepeating(VirtualFrame frame) {
-            if (PascalTypesGen.asBoolean(conditionNode.execute(frame))) {
+            if (whileCondition.profile(PascalTypesGen.asBoolean(conditionNode.execute(frame)))) {
                 loopNode.execute(frame);
                 return true;
             } else {

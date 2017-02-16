@@ -6,6 +6,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import com.oracle.truffle.api.profiles.ConditionProfile;
 import cz.chovanecm.pascal.truffle.PascalTypesGen;
 import cz.chovanecm.pascal.truffle.nodes.ExpressionNode;
 import cz.chovanecm.pascal.truffle.nodes.StatementNode;
@@ -19,6 +20,7 @@ import cz.chovanecm.pascal.truffle.nodes.StatementNode;
  */
 @NodeInfo(shortName = "if")
 public class IfNode extends StatementNode {
+    private final ConditionProfile conditionProfile;
     @Child
     private ExpressionNode conditionNode;
     @Child
@@ -30,13 +32,14 @@ public class IfNode extends StatementNode {
         this.conditionNode = conditionNode;
         this.thenNode = thenNode;
         this.elseNode = elseNode;
+        conditionProfile = ConditionProfile.createCountingProfile();
     }
 
     @Override
     public void execute(VirtualFrame frame) {
         try {
-            boolean conditionResult = PascalTypesGen.expectBoolean(conditionNode.execute(frame));
-            if (conditionResult) {
+
+            if (conditionProfile.profile(PascalTypesGen.expectBoolean(conditionNode.execute(frame)))) {
                 thenNode.execute(frame);
             } else if (elseNode != null) {
                 elseNode.execute(frame);
