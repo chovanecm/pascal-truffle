@@ -61,3 +61,4 @@ The following table shows the time needed to execute respective programs.
 
 ## Acknowledgements
 - A big thanks to Karel Rank, who allowed me to use his older work, [Pascal Parser](https://github.com/karl82/pascal-interpreter), as my starting point.
+- [Jakub Podlešák](https://github.com/japod) from Oracle for his tutorial session at the Czech Technical University and providing me with further materials on Truffle
