@@ -58,6 +58,13 @@ The following table shows the time needed to execute respective programs.
 | Collatz  | 2,1  | 168  | 90  | 3,15  |
 | Bubble  | 0,225  | 30  | 19,5  | 5,04  |
 
+### About the Programs
+
+#### Collatz
+Collatz computes the Collatz sequence of given natural number *n*. The successor of *n* is *n/2* for even numbers and *3n+1* for odd numbers until reaching *1*. This is repeated many times to heat the virtual machine up.
+
+#### Bubble
+Bubble is a bubble sort implementation running on 10 000 numbers in an array. It requires many memory access operations, including access to the array. Unlike *Collatz*, it doesn't repeat the program itself many times. Therefore, the virtual machine is not as heated up as in the previous program. When repeating the program 10 times, the sorting is in average about 25 % faster than the signle-pass version.
 
 ## Acknowledgements
 - A big thanks to Karel Rank, who allowed me to use his older work, [Pascal Parser](https://github.com/karl82/pascal-interpreter), as my starting point.
