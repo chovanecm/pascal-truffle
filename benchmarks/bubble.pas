@@ -3,7 +3,7 @@ var arr : array [1..10000] of integer;
 var n, i, j : integer;
 var tmp : integer;
 var sorted: boolean;
-swaps : integer;
+var swaps : integer;
 begin
 
 n := 10000;
