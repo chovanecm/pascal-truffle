@@ -36,7 +36,7 @@ JDK_HOME must be set to graalvm, then run mvn package.
 	./run-pascal benchmark/bubble.pas -time
 	
 The code above runs bubble sort on 10000 numbers and prints the time needed to execute the code (without time needed to start the Java Virtual Machine).  
-There is one another benchmark in the directory. 
+There is one additional benchmark in the directory. 
 
 Code can be entered using the standard input as well.
 
